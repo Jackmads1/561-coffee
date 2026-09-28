@@ -27,6 +27,12 @@ nav a{pointer-events:auto;text-decoration:none}
 .links{display:flex;gap:clamp(12px,1.5vw,22px)}
 .links a{font:700 10.5px/1 Archivo,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--cream);opacity:.9;padding:6px 0;border-bottom:1px solid transparent}
 .links a:hover,.links a.on{border-bottom-color:var(--cream)}
+#grain{position:fixed;inset:-50%;z-index:7;pointer-events:none;opacity:.07;mix-blend-mode:overlay;animation:grain .9s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+.tilt{position:absolute;left:0;right:0;height:26%;pointer-events:none;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.tilt.t{top:0;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent)}
+.tilt.b{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000);mask-image:linear-gradient(transparent,#000)}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(30,16,8,.35) 100%)}
 #bar{position:fixed;right:0;top:0;width:3px;height:9vh;background:var(--cream);z-index:8;opacity:.9;will-change:transform}
 
 /* loader */
@@ -73,7 +79,7 @@ body.go .h-word .w>span{transform:none}
 .pulled-h em{display:block;font:800 clamp(10px,.9vw,14px)/1 Archivo,sans-serif;font-style:normal;letter-spacing:.08em;color:var(--caramel);margin:4px 0 0 calc(50% + 9vw);text-align:left;width:10ch}
 .hint{position:absolute;left:12vw;bottom:13vh;display:flex;flex-direction:column;align-items:center;gap:10px;font:800 9px Archivo,sans-serif;letter-spacing:.14em;color:var(--cream2);text-transform:uppercase}
 .hint svg{width:22px;height:22px}
-.quip{position:absolute;right:29vw;bottom:16vh;margin:0;text-align:right;font:800 clamp(10px,.8vw,12px)/1.35 Archivo,sans-serif;letter-spacing:.03em;text-transform:uppercase}
+.quip{position:absolute;right:5vw;bottom:24vh;margin:0;text-align:right;font:800 clamp(10px,.8vw,12px)/1.35 Archivo,sans-serif;letter-spacing:.03em;text-transform:uppercase}
 .foot{position:absolute;right:clamp(16px,2vw,28px);bottom:18px;margin:0;text-align:right;font:800 8.5px/1.4 Archivo,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--cream2)}
 #glow{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .6s ease;overflow:hidden;
  -webkit-mask-image:linear-gradient(to right,#000 0,rgba(0,0,0,.35) 26px,transparent 90px,transparent calc(100% - 90px),rgba(0,0,0,.35) calc(100% - 26px),#000 100%),linear-gradient(to bottom,#000 0,rgba(0,0,0,.35) 26px,transparent 90px,transparent calc(100% - 90px),rgba(0,0,0,.35) calc(100% - 26px),#000 100%);
@@ -191,6 +197,7 @@ body.nogl #hero{background:radial-gradient(60% 60% at 50% 55%,#3a2a1a,#1a100b)}
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="glow" aria-hidden="true"><i></i></div>
 <div id="bar" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
 <div id="cue"><i></i>SCROLL TO CONTINUE</div>
 
 <nav>
@@ -206,6 +213,7 @@ body.nogl #hero{background:radial-gradient(60% 60% at 50% 55%,#3a2a1a,#1a100b)}
 
 <main>
   <section id="hero">
+    <div class="tilt t"></div><div class="tilt b"></div><div class="vig"></div>
     <div class="h-tag fade-in">Roasted slow. Poured for the 561.</div>
     <h1 class="h-word" aria-label="561 Coffee"><span class="w"><span>561</span></span> <span class="w"><span>Coffee</span></span></h1>
     <p class="h-copy fade-in">Small-batch beans, roasted this week and pulled fresh. 561 Coffee makes the first sip of the day the best part of it.</p>
@@ -392,7 +400,7 @@ try{if(T){var tc=document.createElement('canvas');hasGL=!!(tc.getContext('webgl'
 if(!hasGL)document.body.classList.add('nogl');
 
 var dist=14,V=7.5,upp=1,camZoom=1;
-var desk,puck,mug,mugTilt,steam=[],room,lights={},clipPlane,matMesh,texReady=false,mode='A';
+var desk,puck,mug,mugTilt,hand,mugBlob,puckBlob,steam=[],room,lights={},clipPlane,matMesh,texReady=false,mode='A';
 function cv(w,h){var c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function tex(c,srgb){var t=new T.CanvasTexture(c);if(srgb!==false)t.encoding=T.sRGBEncoding;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t}
 function speckle(x,w,h,n,cols,rmin,rmax,amin,amax,r){for(var i=0;i<n;i++){x.globalAlpha=amin+r()*(amax-amin);x.fillStyle=cols[(r()*cols.length)|0];var rr=rmin+r()*(rmax-rmin);x.beginPath();x.arc(r()*w,r()*h,rr,0,6.283);x.fill()}x.globalAlpha=1}
@@ -431,6 +439,23 @@ function sideCanvas(){var w=1024,h=128,c=cv(w,h),x=c.getContext('2d'),r=rng(4);x
 function printCanvas(){var w=2048,h=400,c=cv(w,h),x=c.getContext('2d');x.save();x.translate(w/2,h*.47);x.rotate(-.1);x.textAlign='center';x.textBaseline='middle';x.fillStyle='#45291A';x.font='310px Knewave, cursive';x.fillText('561',0,0);x.restore();
   x.textAlign='center';x.fillStyle='#45291A';x.font='800 44px Archivo, sans-serif';if('letterSpacing' in x)x.letterSpacing='14px';x.fillText('COFFEE',w/2+7,h*.93);return c}
 function cremaCanvas(){var s=512,c=cv(s,s),x=c.getContext('2d'),r=rng(8);var g=x.createRadialGradient(s/2,s/2,10,s/2,s/2,s/2);g.addColorStop(0,'#5A2E16');g.addColorStop(.6,'#7A4020');g.addColorStop(.9,'#B06E3C');g.addColorStop(1,'#C9905C');x.fillStyle=g;x.fillRect(0,0,s,s);speckle(x,s,s,5000,['#d8a472','#3a1c0c'],.6,1.6,.1,.35,r);return c}
+function latteCanvas(){var s=1024,c=cv(s,s),x=c.getContext('2d'),r=rng(31);
+  var g=x.createRadialGradient(s/2,s/2,10,s/2,s/2,s/2);g.addColorStop(0,'#5E3016');g.addColorStop(.55,'#7A4220');g.addColorStop(.82,'#A0602F');g.addColorStop(.95,'#C38A55');g.addColorStop(1,'#8A5028');x.fillStyle=g;x.fillRect(0,0,s,s);
+  speckle(x,s,s,9000,['#C9925E','#4A220E','#E0B386'],.8,2.4,.08,.3,r);
+  // rosetta in microfoam
+  x.save();x.translate(s/2,s/2);x.rotate(-Math.PI/2);x.translate(-s/2,-s/2);
+  if('filter' in x)x.filter='blur(5px)';
+  x.fillStyle='rgba(250,238,220,.96)';
+  x.beginPath();x.ellipse(s/2,s*.7,s*.2,s*.12,0,0,6.283);x.fill();
+  for(var i=0;i<7;i++){var y=s*.6-i*s*.055,rx=s*.19*(1-i*.11),ry=s*.035;x.beginPath();x.ellipse(s/2,y,rx,ry,0,0,6.283);x.fill()}
+  x.beginPath();x.ellipse(s/2,s*.2,s*.05,s*.045,0,0,6.283);x.fill();
+  x.strokeStyle='rgba(140,82,40,.55)';x.lineWidth=5;
+  for(i=0;i<7;i++){y=s*.6-i*s*.055+s*.027;rx=s*.18*(1-i*.11);x.beginPath();x.ellipse(s/2,y,rx,s*.02,0,Math.PI*.05,Math.PI*.95);x.stroke()}
+  x.lineWidth=7;x.beginPath();x.moveTo(s/2,s*.83);x.lineTo(s/2,s*.16);x.stroke();
+  if('filter' in x)x.filter='none';x.restore();
+  speckle(x,s,s,2500,['#8A5028','#FFF4E6'],.5,1.4,.05,.2,rng(5));
+  return c}
+function blobCanvas(){var s=256,c=cv(s,s),x=c.getContext('2d'),g=x.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);g.addColorStop(0,'rgba(20,10,4,.75)');g.addColorStop(.45,'rgba(20,10,4,.45)');g.addColorStop(1,'rgba(20,10,4,0)');x.fillStyle=g;x.fillRect(0,0,s,s);return c}
 function steamCanvas(){var s=256,c=cv(s,s),x=c.getContext('2d');var g=x.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);g.addColorStop(0,'rgba(255,248,240,.9)');g.addColorStop(.4,'rgba(255,248,240,.35)');g.addColorStop(1,'rgba(255,248,240,0)');x.fillStyle=g;x.fillRect(0,0,s,s);return c}
 function beanCanvas(){var w=256,h=128,c=cv(w,h),x=c.getContext('2d'),r=rng(2);var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#3a2012');g.addColorStop(.5,'#5a341c');g.addColorStop(1,'#3a2012');x.fillStyle=g;x.fillRect(0,0,w,h);speckle(x,w,h,1500,['#6b4326','#2a160b'],.5,1.2,.2,.6,r);
   x.strokeStyle='#170a04';x.lineWidth=7;x.lineCap='round';x.beginPath();for(var y=6;y<=h-6;y+=4){var X=w*.25+Math.sin(y/h*6.28)*6;y===6?x.moveTo(X,y):x.lineTo(X,y)}x.stroke();return c}
@@ -460,7 +485,7 @@ function build(){
   var pm=new T.PMREMGenerator(renderer);scene.environment=pm.fromScene(es,.04).texture;pm.dispose();
 
   lights.hemi=new T.HemisphereLight(0xfff1e0,0x3a2414,.55);scene.add(lights.hemi);
-  var key=lights.key=new T.DirectionalLight(0xffe4c4,2.1);key.position.set(-5,6,10);key.castShadow=true;key.shadow.mapSize.set(2048,2048);
+  var key=lights.key=new T.DirectionalLight(0xffe4c4,2.1);key.position.set(-5,6,10);key.castShadow=true;key.shadow.mapSize.set(innerWidth>900?4096:2048,innerWidth>900?4096:2048);
   var sc=key.shadow.camera;sc.left=-10;sc.right=10;sc.top=10;sc.bottom=-10;sc.near=.5;sc.far=40;key.shadow.bias=-.0006;key.shadow.radius=4;scene.add(key);scene.add(key.target);
   lights.rim=new T.DirectionalLight(0xff9a50,1.6);lights.rim.position.set(4,6,-8);scene.add(lights.rim);
   lights.rim2=new T.DirectionalLight(0xffc890,.9);lights.rim2.position.set(-6,-3,-6);scene.add(lights.rim2);
@@ -485,7 +510,7 @@ function build(){
   tamp.traverse(function(m){if(m.isMesh)m.castShadow=true});
   tamp.rotation.set(0,0,Math.PI/2);var tw=new T.Group();tw.add(tamp);tw.rotation.set(0,-.28,.6);tw.position.set(4.3,2.2,.95);desk.add(tw);
   // demitasse cup on saucer
-  var cer=dm({color:0xF3E9DC,roughness:.3,metalness:0});
+  var cer=new T.MeshPhysicalMaterial({color:0xF3E9DC,roughness:.3,clearcoat:.7,clearcoatRoughness:.12,clippingPlanes:[clipPlane]});
   var dc=new T.Group();
   var sau=new T.Mesh(new T.CylinderGeometry(1.05,.85,.1,64),cer);sau.position.y=.05;dc.add(sau);
   var cp=[[0,.1],[.42,.1],[.52,.16],[.6,.4],[.62,.74],[.58,.76],[.54,.74],[.52,.42],[.44,.2],[0,.2]].map(function(p){return new T.Vector2(p[0],p[1])});
@@ -497,8 +522,9 @@ function build(){
   // roast log card
   var paper=new T.Mesh(new T.PlaneGeometry(2.1,2.6),dm({map:tex(paperCanvas()),roughness:.9}));paper.position.set(-1.5,-2.9,.05);paper.rotation.z=.32;paper.receiveShadow=true;paper.castShadow=true;desk.add(paper);
   // beans
-  var beanM=dm({map:tex(beanCanvas()),roughness:.42}),beanG=new T.SphereGeometry(1,24,16),br=rng(77);
-  for(i=0;i<16;i++){var b=new T.Mesh(beanG,beanM);b.scale.set(.15,.21,.1);var cx=i<11?3.4:-1.9,cy=i<11?-2.3:2.5;b.position.set(cx+(br()-.5)*1.8,cy+(br()-.5)*1.2,.12);b.rotation.set((br()-.5)*.3,(br()-.5)*.3,br()*6.28);b.castShadow=true;desk.add(b)}
+  var beanM=new T.MeshPhysicalMaterial({map:tex(beanCanvas()),roughness:.38,clearcoat:.35,clearcoatRoughness:.4,clippingPlanes:[clipPlane]}),beanG=new T.SphereGeometry(1,40,28),br=rng(77);
+  var bp=beanG.attributes.position;for(var q=0;q<bp.count;q++){var X=bp.getX(q),Z=bp.getZ(q);if(Z>0){Z*=.62;Z*=1-.55*Math.exp(-X*X/.012);bp.setZ(q,Z)}}beanG.computeVertexNormals();
+  for(i=0;i<16;i++){var b=new T.Mesh(beanG,beanM);b.scale.set(.15,.21,.1);var cx=i<10?-3.3:2.2,cy=i<10?-.4:2.7;b.position.set(cx+(br()-.5)*1.8,cy+(br()-.5)*1.2,.12);b.rotation.set((br()-.5)*.3,(br()-.5)*.3,br()*6.28);b.castShadow=true;desk.add(b)}
 
   // puck
   var gT=tex(groundsCanvas(false)),gB=tex(groundsCanvas(true),false);
@@ -506,16 +532,42 @@ function build(){
   puck=new T.Mesh(pg,[new T.MeshStandardMaterial({map:tex(sideCanvas()),roughness:.9}),new T.MeshStandardMaterial({map:gT,bumpMap:gB,bumpScale:.035,roughness:.88}),new T.MeshStandardMaterial({color:0x24150c,roughness:.9})]);
   puck.castShadow=true;puck.receiveShadow=true;scene.add(puck);
   var rimRing=new T.Mesh(new T.TorusGeometry(1,.035,12,96),new T.MeshStandardMaterial({color:0x3a2416,roughness:.8}));rimRing.position.z=.18;puck.add(rimRing);
+  var blobT=tex(blobCanvas(),false);
+  puckBlob=new T.Mesh(new T.PlaneGeometry(2.9,2.9),new T.MeshBasicMaterial({map:blobT,transparent:true,depthWrite:false}));puckBlob.position.z=-.17;puck.add(puckBlob);
 
   // mug
   mug=new T.Group();
   var mp=[[0,0],[.9,0],[.99,.03],[1.05,.13],[1.06,.3],[1.06,1.98],[1.045,2.07],[1.0,2.1],[.955,2.08],[.94,2.0],[.94,.3],[.86,.2],[0,.2]].map(function(p){return new T.Vector2(p[0],p[1])});
-  var mm=new T.MeshStandardMaterial({color:0xF4E8D8,roughness:.32,metalness:0,side:T.DoubleSide});
+  var mm=new T.MeshPhysicalMaterial({color:0xF4E8D8,roughness:.3,clearcoat:.8,clearcoatRoughness:.12,side:T.DoubleSide});
   var body=new T.Mesh(new T.LatheGeometry(mp,120),mm);body.castShadow=true;body.receiveShadow=true;mug.add(body);
   var pr=new T.Mesh(new T.CylinderGeometry(1.064,1.064,1.26,120,1,true,-Math.PI,Math.PI*2),new T.MeshStandardMaterial({map:tex(printCanvas()),transparent:true,roughness:.4,polygonOffset:true,polygonOffsetFactor:-2}));pr.position.y=1.05;mug.add(pr);
-  var cof=new T.Mesh(new T.CircleGeometry(.945,64),new T.MeshStandardMaterial({map:tex(cremaCanvas()),roughness:.18}));cof.rotation.x=-Math.PI/2;cof.position.y=1.8;mug.add(cof);
+  var cof=new T.Mesh(new T.CircleGeometry(.945,96),new T.MeshPhysicalMaterial({map:tex(latteCanvas()),roughness:.45,clearcoat:.6,clearcoatRoughness:.25}));cof.rotation.x=-Math.PI/2;cof.rotation.z=Math.PI;cof.position.y=1.8;mug.add(cof);
+  mugBlob=new T.Mesh(new T.PlaneGeometry(3.4,3.4),new T.MeshBasicMaterial({map:blobT,transparent:true,depthWrite:false}));mugBlob.rotation.x=-Math.PI/2;mugBlob.position.y=.01;mug.add(mugBlob);
   var hd=new T.Mesh(new T.TorusGeometry(.46,.13,20,48,Math.PI*1.16),mm);hd.position.set(1.12,1.08,0);hd.rotation.z=-Math.PI*.58;hd.castShadow=true;mug.add(hd);
   mugTilt=new T.Group();mugTilt.add(mug);scene.add(mugTilt);
+  hand=new T.Group();mug.add(hand);
+  var skin=new T.MeshPhysicalMaterial({color:0x3E2216,roughness:.55,clearcoat:.15,clearcoatRoughness:.5});
+  var nail=new T.MeshPhysicalMaterial({color:0xB88A74,roughness:.25,clearcoat:.8,clearcoatRoughness:.1});
+  var Yax=new T.Vector3(0,1,0);
+  function V3(a){return new T.Vector3(a[0],a[1],a[2])}
+  function limb(a,b,r1,r2){var d=new T.Vector3().subVectors(b,a),L=d.length(),m=new T.Mesh(new T.CylinderGeometry(r2,r1,L,32,1,true),skin);m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(Yax,d.normalize());m.castShadow=true;m.receiveShadow=true;hand.add(m)}
+  function ball(p,r,sx){var m=new T.Mesh(new T.SphereGeometry(r,32,22),skin);m.position.copy(p);m.castShadow=true;m.receiveShadow=true;hand.add(m);return m}
+  function chain(pts,rs){pts=pts.map(V3);for(var k=0;k<pts.length;k++){ball(pts[k],rs[k]);if(k)limb(pts[k-1],pts[k],rs[k-1],rs[k])}}
+  var KN=[[1.8,1.24,.55],[1.86,.93,.57],[1.9,.63,.52],[1.84,.36,.44]];
+  chain([KN[0],[1.3,1.22,.14],[1.18,1.2,-.3],[.96,1.18,-.52]],[.2,.18,.165,.15]);
+  chain([KN[1],[1.3,.92,.14],[1.17,.9,-.33],[.93,.88,-.55]],[.205,.185,.17,.155]);
+  chain([KN[2],[1.52,.44,.34],[1.36,.36,.04],[1.26,.42,-.2]],[.195,.175,.16,.145]);
+  chain([KN[3],[1.58,.2,.3],[1.46,.15,.1],[1.42,.22,-.05]],[.17,.15,.14,.125]);
+  chain([[2.08,.9,.95],[1.9,1.45,.62],[1.58,1.84,.34],[1.32,1.9,.12]],[.34,.24,.215,.19]);
+  [[.96,1.18,-.52],[.93,.88,-.55],[1.26,.42,-.2],[1.42,.22,-.05],[1.32,1.9,.12]].forEach(function(t,i){var n=new T.Mesh(new T.SphereGeometry(i==4?.15:.12,20,14),nail);n.position.copy(V3(t));n.position.y+=i==4?.1:.03;n.scale.set(1,.45,1.2);hand.add(n)});
+  var WR=V3([1.98,.62,2.05]);
+  KN.forEach(function(k,i){limb(V3(k),WR,[.24,.25,.24,.21][i],.34)});
+  chain([KN[0],KN[1],KN[2],KN[3]],[.24,.25,.24,.21]);
+  limb(V3([2.08,.9,.95]),WR,.34,.36);
+  var pc=ball(V3([1.98,.78,1.25]),.5);pc.scale.set(.5,.95,1.25);pc.position.x+=.06;
+  ball(WR,.33);
+  limb(WR,V3([2.35,-1.6,2.9]),.33,.42);ball(V3([2.35,-1.6,2.9]),.42);limb(V3([2.35,-1.6,2.9]),V3([2.6,-6.5,3.6]),.42,.5);
+  hand.visible=false;
   var stT=tex(steamCanvas());
   for(i=0;i<5;i++){var sp=new T.Sprite(new T.SpriteMaterial({map:stT,transparent:true,opacity:0,depthWrite:false}));sp.userData.o=i/5;scene.add(sp);steam.push(sp)}
 
@@ -621,34 +673,34 @@ function tick(now){
     var off=sy*upp;desk.position.set(0,off,0);clipPlane.constant=V/2-off+.001; // clip at the hero's bottom edge
     desk.visible=off<V*1.6;
     lights.key.position.set(-5,6,10);lights.key.target.position.set(0,0,0);
-    var dark=seg(u,.3,1);lights.rim.intensity=1.6*dark;lights.rim2.intensity=.9*dark;lights.hemi.intensity=.55;lights.key.intensity=lerp(2.1,1.5,dark);
+    var dark=seg(u,.3,1);lights.rim.intensity=2.2*dark;lights.rim2.intensity=1.1*dark;lights.hemi.intensity=lerp(.55,.4,dark);lights.key.intensity=lerp(2.1,1.35,dark);
 
-    // puck path
     var hs=ease(seg(u,0,1));
-    // hero: resting on the mat, drifting to centre and lifting toward camera
-    vA.set(lerp(-.35,0,hs),lerp(-.25,0,hs),lerp(.21,1.8,hs));qe(qA,-.3*hs,0,.2*hs);var ps=1;
-    // lift: tumble
+    var tilt=.36,mIn=eo(seg(u,P.t-.95,P.t+.05)),mOut=ease(seg(u,pullEnd,pullEnd+1)),spin=-.32+pp*.45+Math.sin(time*.6)*.04;
+    if(u<L.t+.3){ // hero: the mug stands in the middle of the mat and scrolls away with the desk
+      mugTilt.visible=true;hand.visible=false;mugBlob.visible=true;
+      mugTilt.position.set(0,off,.04);mugTilt.rotation.set(Math.PI/2,0,0);mug.rotation.set(0,-.55,0);upv.set(0,0,1);
+    }else{ // held up by a hand
+      var mx0=W<760?-.35:-.55,my0=W<760?-1.45:-1.15;
+      mugTilt.position.set(mx0,lerp(-V*1.35,my0,mIn)+mOut*V*1.4,0);mugTilt.rotation.set(tilt,0,0);mug.rotation.set(0,spin,0);
+      mugTilt.visible=mIn>0&&mOut<1;hand.visible=true;mugBlob.visible=false;upv.set(0,Math.cos(tilt),Math.sin(tilt));
+    }
+    // puck: beside the mug, lifts to centre, tumbles, leaves, returns inside the frame
+    vA.set(lerp(2.75,0,hs),lerp(-1.55,0,hs),lerp(.21,1.8,hs));qe(qA,-.3*hs,0,.2*hs);var ps=1;
+    puckBlob.visible=hs<.03;
     var lq=seg(u,L.t,liftEnd+.3);
     if(u>L.t){qe(qA,-.3-1.15*Math.sin(lq*Math.PI)-.2*lq,.45*Math.sin(lq*Math.PI*2),.2+lq*Math.PI*.55);vA.set(0,.15*Math.sin(lq*Math.PI),1.8)}
-    // mug arrives with the pulled section; puck slides under it as a coaster
-    var tilt=.36,mIn=eo(seg(u,P.t-.45,P.t+.1)),mOut=ease(seg(u,pullEnd,pullEnd+1));
-    var mugY=lerp(V*1.15,-1.25,mIn)+mOut*V*1.2,spin=-.35+pp*.7+Math.sin(time*.6)*.04;
-    if(W<760)mugY=lerp(V*1.15,-1.6,mIn)+mOut*V*1.2;
-    mugTilt.position.set(0,mugY,0);mugTilt.rotation.set(tilt,0,0);mug.rotation.set(0,spin,0);mugTilt.visible=mIn>0&&mOut<1;var ms=mugTilt.visible?1:0;
-    upv.set(0,Math.cos(tilt),Math.sin(tilt));
-    var under=ease(seg(u,P.t-1,P.t-.3));
-    if(under>0){vB.set(0,(W<760?-1.6:-1.25)+mOut*V*1.2,0).addScaledVector(upv,-.234);qe(qB,tilt-Math.PI/2,0,spin*.5);vA.lerp(vB,under);qA.slerp(qB,under);ps=lerp(1,1.3,under)}
-    // off the mug and into the frame
-    var toF=ease(seg(u,pullEnd+.1,F.t+.15));
-    if(toF>0){var fr=.36*fw*upp*dist/(dist-0);vB.set(0,0,0);qe(qB,-.55,.12*Math.sin(time*.7),Math.sin(time*.5)*.25);vA.lerp(vB,toF);qA.slerp(qB,toF);ps=lerp(ps,fr,toF)}
+    var away=ease(seg(u,liftEnd+.05,P.t-.25));vA.y+=away*V*1.35;
+    var toF=ease(seg(u,pullEnd+.2,F.t+.15));
+    if(toF>0){var fr=.36*fw*upp;vA.set(0,lerp(-V*1.3,0,toF),0);qe(qA,-.55,.12*Math.sin(time*.7),Math.sin(time*.5)*.25);ps=fr}
     var gone=ease(seg(f,2.05,2.4));ps*=1-gone;
-    place(puck,vA,qA,Math.max(ps,.0001));puck.visible=ps>.001;
-    // hover glow on the mug
+    place(puck,vA,qA,Math.max(ps,.0001));puck.visible=ps>.001&&(away<1||toF>0);
+    // hover glow on the held mug
     var inP=u>P.t-.05&&u<pullEnd+.05;
-    if(inP){tmp.copy(mugTilt.position).addScaledVector(upv,1.05).project(camera);var mx=(tmp.x*.5+.5)*W,my=(-tmp.y*.5+.5)*H,rr=1.5/upp;
+    if(inP){tmp.copy(mugTilt.position).addScaledVector(upv,1.05).project(camera);var mx=(tmp.x*.5+.5)*W,my=(-tmp.y*.5+.5)*H,rr=1.6/upp;
       glowOn=tapGlow||((mouse.x-mx)*(mouse.x-mx)+(mouse.y-my)*(mouse.y-my)<rr*rr)}else{glowOn=false;tapGlow=false}
     glowEl.classList.toggle('on',glowOn);
-    steamAt(mugTilt.position,upv,time,mugTilt.visible?mIn*(1-mOut):0);
+    steamAt(mugTilt.position,upv,time,u<L.t+.3?.5*(1-hs):mIn*(1-mOut));
   }else{
     glowEl.classList.remove('on');
     desk.visible=true;desk.rotation.set(-Math.PI/2,0,0);desk.position.set(-.9,0,-.3);clipPlane.constant=1000;
@@ -656,7 +708,7 @@ function tick(now){
     var base=new T.Vector3(.9,-.5,.04).applyMatrix4(desk.matrixWorld);
     var k=seg(u,freshEnd,deskEnd+.8);
     qe(qA,-Math.PI/2,0,.4);vA.set(base.x,base.y+.18*1.3+.02,base.z);place(puck,vA,qA,1.3);puck.visible=true;
-    mugTilt.visible=true;mugTilt.rotation.set(0,0,0);mugTilt.position.set(base.x,base.y+.36*1.3+.03,base.z);mug.rotation.set(0,-.3+k*.25,0);
+    mugTilt.visible=true;hand.visible=false;mugBlob.visible=false;puckBlob.visible=true;mugTilt.rotation.set(0,0,0);mugTilt.position.set(base.x,base.y+.36*1.3+.03,base.z);mug.rotation.set(0,-.3+k*.25,0);
     upv.set(0,1,0);
     var tx=base.x,ty=1.15,tz=base.z;
     var cz=lerp(12.5,10.2,ease(k))*dist/14,cyy=lerp(3.1,2.5,ease(k))+(dist/14-1)*1.2;
@@ -675,7 +727,7 @@ var loader=$('#loader'),lsvg=$('#lsvg'),pct=$('#pct');
 function drawLoader(){
   var cx=W/2,cy=H/2,R=110;
   if(renderer){camera.position.set(0,0,dist*.8);camera.lookAt(0,0,0);camera.updateMatrixWorld();
-    var c=new T.Vector3(-.35,-.25,.21).project(camera),e=new T.Vector3(.65,-.25,.21).project(camera);cx=(c.x*.5+.5)*W;cy=(-c.y*.5+.5)*H;R=Math.abs(e.x-c.x)*.5*W}
+    var c=new T.Vector3(0,0,2.14).project(camera),e=new T.Vector3(1.06,0,2.14).project(camera);cx=(c.x*.5+.5)*W;cy=(-c.y*.5+.5)*H;R=Math.abs(e.x-c.x)*.5*W}
   var r2=R*.62,h=5,sq=function(x,y){return '<rect class="hd" x="'+(x-h/2)+'" y="'+(y-h/2)+'" width="'+h+'" height="'+h+'"/>'};
   var ln=function(d){return '<path class="ln" pathLength="1" d="'+d+'"/>'};
   var circ=function(r){return 'M'+(cx+r)+' '+cy+'A'+r+' '+r+' 0 1 1 '+(cx-r)+' '+cy+'A'+r+' '+r+' 0 1 1 '+(cx+r)+' '+cy};
@@ -704,6 +756,7 @@ function runLoader(){
 
 /* ---------- boot ---------- */
 var ready=false;
+(function(){var c=document.createElement('canvas');c.width=c.height=160;var x=c.getContext('2d'),d=x.createImageData(160,160);for(var i=0;i<d.data.length;i+=4){var v=Math.random()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}x.putImageData(d,0,0);$('#grain').style.backgroundImage='url('+c.toDataURL()+')'})();
 function fontsReady(){var f=document.fonts;if(!f||!f.load)return Promise.resolve();
   return Promise.race([Promise.all(['330px Knewave','800 40px Archivo','600 20px Figtree','40px "DM Serif Display"'].map(function(s){return f.load(s)})),new Promise(function(r){setTimeout(r,2500)})]).catch(function(){})}
 function onResize(){measure();if(renderer)sizeCam();frameSize()}
