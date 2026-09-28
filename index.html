@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>561 Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Yellowtail&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F5E4D2;
+  --paper-2:#EDD6BF;
+  --ink:#45291A;
+  --ink-soft:#6E5446;
+  --cobalt:#A26833;
+  --cobalt-ink:#FCE1CD;
+  --cherry:#C23A2B;
+  --line:#DCC6AE;
+  --card:#FAEEE1;
+  --espresso:#2A1810;
+  --milk:#F6EBDD;
+  --display:"Antonio","Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#1E120C;--paper-2:#26170F;--ink:#F3E4D2;--ink-soft:#BFA58F;
+    --cobalt:#E3A15E;--cobalt-ink:#1E120C;--cherry:#FF7A63;--line:#3B271C;--card:#28180F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1E120C;--paper-2:#26170F;--ink:#F3E4D2;--ink-soft:#BFA58F;
+  --cobalt:#E3A15E;--cobalt-ink:#1E120C;--cherry:#FF7A63;--line:#3B271C;--card:#28180F;
+}
+*{box-sizing:border-box}
+body{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;padding-inline:20px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:.95;margin:0;text-wrap:balance;text-transform:uppercase;letter-spacing:-.01em}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.note{font-family:var(--mono);font-size:12px;color:var(--cherry)}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-20px;padding:14px 20px}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:"Yellowtail","Brush Script MT",cursive;font-weight:400;font-size:34px;line-height:1;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo .dot{width:12px;height:12px;border-radius:50%;background:var(--cherry)}
+nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0;font-weight:600;font-size:15px}
+nav ul a{text-decoration:none}
+nav ul a:hover{color:var(--cobalt)}
+@media (max-width:640px){nav ul{display:none}}
+
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;font-weight:700;font-size:15px;padding:13px 22px;border-radius:999px;text-decoration:none;border:2px solid var(--ink);transition:transform .15s}
+.btn.primary{background:var(--cobalt);border-color:var(--cobalt);color:var(--cobalt-ink)}
+.btn:hover{transform:translateY(-1px)}
+/* hero */
+.hero{position:relative;padding-block:72px 88px;display:flex;flex-direction:column;align-items:center;text-align:center;isolation:isolate}
+.hero h1{display:flex;flex-direction:column;align-items:center;gap:0;font-size:clamp(52px,9vw,128px);line-height:.95;letter-spacing:-.02em;max-width:none}
+.hero .l1{color:var(--ink)}
+.hero .l2{background:var(--cobalt);color:var(--cobalt-ink);padding:.08em .18em .04em;transform:rotate(-3deg);margin-top:-.02em;border:.06em solid var(--paper)}
+.hero p{color:var(--ink);max-width:40ch;margin:28px 0 30px;font-size:17px}
+.btn.pill{background:#E3A458;border-color:#E3A458;color:#45291A;text-transform:uppercase;letter-spacing:.04em;padding:16px 40px}
+.beans{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.bean{position:absolute;left:50%;top:45%;width:var(--w,54px);aspect-ratio:1/1.35;margin:calc(var(--w,54px)/-2) 0 0 calc(var(--w,54px)/-2);border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#8a5634,#4a2a18 70%);box-shadow:inset -4px -6px 10px rgba(0,0,0,.35);transform:translate(var(--x),var(--y)) rotate(var(--r));filter:blur(var(--b,0px))}
+.bean::after{content:"";position:absolute;left:44%;top:10%;width:18%;height:80%;border-left:3px solid #2a170d;border-radius:50%}
+body.intro .l1{animation:wipe .8s .35s cubic-bezier(.7,0,.2,1) both}
+body.intro .l2{animation:box .8s .15s cubic-bezier(.7,0,.2,1) both}
+body.intro .hero p,body.intro .hero .btn{animation:fadeup .7s .7s ease both}
+body.intro .bean{animation:burst 1.3s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes box{from{clip-path:inset(0 50% 0 50%);transform:rotate(0) scale(.9)}to{clip-path:inset(0 0 0 0);transform:rotate(-3deg)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px)}}
+@keyframes burst{0%{transform:translate(0,0) rotate(0) scale(.2);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){body.intro .l1,body.intro .l2,body.intro .hero p,body.intro .hero .btn,body.intro .bean{animation:none}}
+
+/* marquee strip */
+.strip{background:var(--ink);color:var(--paper);margin-inline:-20px;overflow:hidden;white-space:nowrap;font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.02em;padding-block:14px}
+.strip span{display:inline-block;padding-left:100%;animation:run 30s linear infinite}
+.strip b{color:var(--cherry);margin:0 18px}
+@keyframes run{to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.strip span{animation:none;padding-left:20px}}
+
+section{padding-block:80px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:36px}
+.head h2{font-size:clamp(42px,6vw,68px);margin-top:10px}
+
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.story p{max-width:60ch;margin:0 0 16px}
+.story .lead{font-size:22px;line-height:1.45;font-weight:500}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink)}
+.facts div{padding:18px 12px 0 0}
+.facts strong{font-family:var(--display);font-size:44px;font-weight:700;display:block;color:var(--cobalt);font-variant-numeric:tabular-nums}
+.facts span{font-size:14px;color:var(--ink-soft)}
+@media (max-width:820px){.story{grid-template-columns:1fr;gap:32px}}
+
+/* coffees */
+.bags{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.bag{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.bag .top{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.bag h3{font-size:34px}
+.bag .origin{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-top:6px}
+.price{font-family:var(--display);font-weight:700;font-size:28px;white-space:nowrap}
+.notes{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.notes li{font-size:13px;font-weight:600;border:1.5px solid var(--ink);border-radius:999px;padding:3px 10px}
+.roast{font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.dial{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
+.dial i{height:8px;border-radius:2px;background:var(--line)}
+.dial i.on{background:var(--cherry)}
+.spec{font-family:var(--mono);font-size:12.5px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;border-top:1px dashed var(--line);padding-top:14px;margin-top:auto}
+.spec span{color:var(--ink-soft)}
+.bag .btn{text-align:center}
+@media (max-width:900px){.bags{grid-template-columns:1fr}}
+
+/* menu */
+.menu-wrap{background:var(--paper-2);margin-inline:-20px;padding-inline:20px}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:48px}
+.menu h3{font-family:var(--mono);font-size:12.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:6px}
+.row{display:flex;align-items:baseline;gap:10px;padding-block:12px;border-bottom:1px solid var(--line)}
+.row .n{font-weight:700}
+.row .d{font-size:14px;color:var(--ink-soft);display:block;font-weight:400}
+.row .fill{flex:1}
+.row .p{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+@media (max-width:760px){.menu{grid-template-columns:1fr;gap:32px}}
+
+/* visit */
+.visit{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.panel{border-radius:18px;padding:32px}
+.panel.blue{background:var(--cobalt);color:var(--cobalt-ink)}
+.panel.blue h2{font-size:clamp(42px,6vw,64px);margin-bottom:16px}
+.panel.blue p{max-width:42ch;margin:0 0 22px;opacity:.9}
+.panel.blue .btn{border-color:var(--cobalt-ink);color:var(--cobalt-ink)}
+.panel.blue .btn.fill{background:var(--cobalt-ink);color:var(--cobalt)}
+.panel.plain{background:var(--card);border:1px solid var(--line)}
+.hours{display:grid;grid-template-columns:auto 1fr;gap:10px 20px;margin:14px 0 24px;font-variant-numeric:tabular-nums}
+.hours dt{font-weight:700}
+.hours dd{margin:0;text-align:right;color:var(--ink-soft)}
+.contact{font-family:var(--mono);font-size:14px;display:grid;gap:6px}
+.socials{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.socials a{font-weight:700;font-size:14px;text-decoration:none;border:1.5px solid var(--ink);border-radius:999px;padding:7px 14px}
+.socials a:hover{background:var(--ink);color:var(--paper)}
+@media (max-width:820px){.visit{grid-template-columns:1fr}}
+
+/* splash */
+.replay{font:inherit;color:inherit;background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+#splash{position:fixed;inset:0;z-index:100;background:#45291A;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .6s ease}
+#splash.out{opacity:0;pointer-events:none}
+#splash svg{width:min(62vw,560px);height:auto;overflow:visible}
+
+footer{border-top:1px solid var(--line);padding-block:28px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top">561 Coffee</a>
+    <ul>
+      <li><a href="#story">Story</a></li>
+      <li><a href="#coffee">Coffee</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#visit">Visit</a></li>
+    </ul>
+    <a class="btn primary" href="#coffee" style="padding:9px 16px;font-size:14px">Shop beans</a>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div class="beans" aria-hidden="true"><i class="bean" style="--x:-560px;--y:-150px;--r:30deg;--w:64px;--b:0px;--d:0.00s"></i><i class="bean" style="--x:-470px;--y:120px;--r:-40deg;--w:80px;--b:2px;--d:0.02s"></i><i class="bean" style="--x:-330px;--y:-230px;--r:70deg;--w:40px;--b:0px;--d:0.04s"></i><i class="bean" style="--x:-260px;--y:210px;--r:15deg;--w:56px;--b:0px;--d:0.06s"></i><i class="bean" style="--x:-640px;--y:40px;--r:-70deg;--w:46px;--b:3px;--d:0.08s"></i><i class="bean" style="--x:350px;--y:-220px;--r:-25deg;--w:58px;--b:0px;--d:0.10s"></i><i class="bean" style="--x:480px;--y:-60px;--r:50deg;--w:86px;--b:2px;--d:0.12s"></i><i class="bean" style="--x:560px;--y:170px;--r:-15deg;--w:60px;--b:0px;--d:0.14s"></i><i class="bean" style="--x:300px;--y:230px;--r:80deg;--w:44px;--b:0px;--d:0.16s"></i><i class="bean" style="--x:650px;--y:-170px;--r:20deg;--w:40px;--b:3px;--d:0.18s"></i><i class="bean" style="--x:-120px;--y:-280px;--r:-50deg;--w:36px;--b:1px;--d:0.20s"></i><i class="bean" style="--x:140px;--y:290px;--r:35deg;--w:50px;--b:1px;--d:0.22s"></i><i class="bean" style="--x:-700px;--y:-260px;--r:10deg;--w:52px;--b:4px;--d:0.24s"></i><i class="bean" style="--x:720px;--y:60px;--r:-60deg;--w:70px;--b:4px;--d:0.26s"></i></div>
+    <h1><span class="l1">Freshly roasted</span><span class="l2">561 Coffee</span></h1>
+    <p>Small-batch beans, roasted this week and brewed to order. Grab a bag, grab a cup, and say hi.</p>
+    <a class="btn pill" href="#coffee">Grab a bag</a>
+  </header>
+</main>
+
+<div class="strip" aria-hidden="true"><span>ROASTED IN SMALL BATCHES <b>●</b> BREWED TO ORDER <b>●</b> 561 COFFEE <b>●</b> ROASTED IN SMALL BATCHES <b>●</b> BREWED TO ORDER <b>●</b> 561 COFFEE <b>●</b></span></div>
+
+<main class="wrap">
+  <section id="story">
+    <div class="story">
+      <div>
+        <div class="eyebrow">Our story</div>
+        <h2 style="font-size:clamp(42px,6vw,68px);margin-top:10px">Why 561?</h2>
+      </div>
+      <div>
+        <p class="lead">561 is where it started. The name is a nod to home, and a promise to make coffee the people there would be proud of.</p>
+        <p>We started 561 Coffee because good coffee shouldn't feel complicated. We buy from farms we can name, roast light enough to taste where it came from, and serve it without the attitude.</p>
+        <p class="note">Placeholder story. Tell me the real origin of the name and I'll rewrite this in your voice.</p>
+        <div class="facts">
+          <div><strong>2026</strong><span>Founded</span></div>
+          <div><strong>3</strong><span>Coffees on rotation</span></div>
+          <div><strong>1:16</strong><span>House brew ratio</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="coffee" style="padding-top:0">
+    <div class="head">
+      <div>
+        <div class="eyebrow">The lineup</div>
+        <h2>Three coffees. All roasted this week.</h2>
+      </div>
+      <p style="color:var(--ink-soft);max-width:36ch;margin:0">12 oz bags, whole bean or ground to order. Ships within two days of roasting.</p>
+    </div>
+    <div class="bags">
+      <article class="bag">
+        <div class="top">
+          <div><h3>Area Code</h3><div class="origin">House blend · Brazil + Colombia</div></div>
+          <div class="price">$18</div>
+        </div>
+        <ul class="notes"><li>Milk chocolate</li><li>Orange</li><li>Brown sugar</li></ul>
+        <div class="roast">Roast level<div class="dial"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="spec"><span>Process</span>Natural / Washed<span>Elevation</span>1,200 to 1,700 masl<span>Best for</span>Espresso, drip</div>
+        <a class="btn" href="#visit">Add to bag</a>
+      </article>
+      <article class="bag">
+        <div class="top">
+          <div><h3>Sunrise</h3><div class="origin">Single origin · Yirgacheffe, Ethiopia</div></div>
+          <div class="price">$21</div>
+        </div>
+        <ul class="notes"><li>Jasmine</li><li>Lemon</li><li>Peach</li></ul>
+        <div class="roast">Roast level<div class="dial"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="spec"><span>Process</span>Washed<span>Elevation</span>1,900 to 2,200 masl<span>Best for</span>Pour over</div>
+        <a class="btn" href="#visit">Add to bag</a>
+      </article>
+      <article class="bag">
+        <div class="top">
+          <div><h3>Night Shift</h3><div class="origin">Dark roast · Sumatra, Indonesia</div></div>
+          <div class="price">$18</div>
+        </div>
+        <ul class="notes"><li>Dark cocoa</li><li>Cedar</li><li>Molasses</li></ul>
+        <div class="roast">Roast level<div class="dial"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></div>
+        <div class="spec"><span>Process</span>Wet hulled<span>Elevation</span>1,100 to 1,500 masl<span>Best for</span>French press, cold brew</div>
+        <a class="btn" href="#visit">Add to bag</a>
+      </article>
+    </div>
+  </section>
+</main>
+
+<div class="menu-wrap" id="menu">
+  <section class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow">At the bar</div>
+        <h2>The menu</h2>
+      </div>
+      <p style="color:var(--ink-soft);max-width:36ch;margin:0">Oat and almond milk at no extra charge.</p>
+    </div>
+    <div class="menu">
+      <div>
+        <h3>Espresso</h3>
+        <div class="row"><span class="n">Espresso<span class="d">Double shot, 18 g in, 36 g out</span></span><span class="fill"></span><span class="p">$3.50</span></div>
+        <div class="row"><span class="n">Cortado<span class="d">Equal parts espresso and milk</span></span><span class="fill"></span><span class="p">$4.25</span></div>
+        <div class="row"><span class="n">Flat White<span class="d">Double shot, thin microfoam</span></span><span class="fill"></span><span class="p">$4.75</span></div>
+        <div class="row"><span class="n">Latte<span class="d">Hot or iced, 12 oz</span></span><span class="fill"></span><span class="p">$5.00</span></div>
+      </div>
+      <div>
+        <h3>Brewed &amp; cold</h3>
+        <div class="row"><span class="n">Batch Brew<span class="d">Rotating coffee, 12 oz</span></span><span class="fill"></span><span class="p">$3.00</span></div>
+        <div class="row"><span class="n">Pour Over<span class="d">Any coffee on the shelf</span></span><span class="fill"></span><span class="p">$5.50</span></div>
+        <div class="row"><span class="n">Cold Brew<span class="d">Steeped 18 hours</span></span><span class="fill"></span><span class="p">$4.75</span></div>
+        <div class="row"><span class="n">561 Tonic<span class="d">Espresso, tonic, orange peel</span></span><span class="fill"></span><span class="p">$5.75</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<main class="wrap">
+  <section id="visit">
+    <div class="visit">
+      <div class="panel blue">
+        <div class="eyebrow" style="color:inherit;opacity:.8">Come by</div>
+        <h2>Coffee's on. Door's open.</h2>
+        <p>Stop in for a cup, pick up a fresh bag, or ask us about wholesale for your office or cafe.</p>
+        <div class="btns">
+          <a class="btn fill" href="#coffee">Shop the beans</a>
+          <a class="btn" href="#visit">Wholesale</a>
+        </div>
+      </div>
+      <div class="panel plain">
+        <div class="eyebrow">Hours</div>
+        <dl class="hours">
+          <dt>Mon to Fri</dt><dd>7:00 am to 3:00 pm</dd>
+          <dt>Sat to Sun</dt><dd>8:00 am to 2:00 pm</dd>
+        </dl>
+        <div class="eyebrow">Contact</div>
+        <div class="contact" style="margin-top:10px">
+          <span>123 Main Street, Your City</span>
+          <span>hello@561coffee.com</span>
+        </div>
+        <div class="socials">
+          <a href="https://instagram.com">Instagram</a>
+          <a href="https://tiktok.com">TikTok</a>
+        </div>
+        <p class="note" style="margin-top:16px">Placeholder address, hours and handles.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 561 Coffee</span>
+    <button id="replay" class="replay" type="button">Replay intro</button>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FONT='font-family="Yellowtail, \'Brush Script MT\', cursive" font-size="230" text-anchor="middle"';
+  // each digit starts big, spread out and tilted, then pulls together into the logo
+  var DIGITS=[{c:'5',x:195,dx:-150,dy:-60,r:-18},{c:'6',x:305,dx:20,dy:90,r:14},{c:'1',x:405,dx:170,dy:-80,r:22}];
+  function run(){
+    var old=document.getElementById('splash'); if(old) old.remove();
+    document.body.classList.remove('intro');
+    var el=document.createElement('div');
+    el.id='splash'; el.setAttribute('role','status'); el.setAttribute('aria-label','Loading 561 Coffee');
+    var defs='', groups='';
+    DIGITS.forEach(function(d,i){
+      var t='<text x="'+d.x+'" y="190" '+FONT;
+      defs+='<mask id="mT'+i+'" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1400" height="1100">'+t+' fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" class="mk tip">'+d.c+'</text></mask>'+
+            '<mask id="mB'+i+'" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1400" height="1100">'+t+' fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" class="mk body">'+d.c+'</text></mask>';
+      groups+='<g class="dg">'+t+' fill="#E3A458" mask="url(#mT'+i+')">'+d.c+'</text>'+t+' fill="#FCE1CD" mask="url(#mB'+i+')">'+d.c+'</text></g>';
+    });
+    el.innerHTML='<svg viewBox="0 0 600 260" aria-hidden="true"><defs>'+defs+'</defs><g class="all">'+groups+'</g></svg>';
+    document.body.appendChild(el);
+    var tips=el.querySelectorAll('.mk.tip'), bodies=el.querySelectorAll('.mk.body'), gs=el.querySelectorAll('.dg'), all=el.querySelector('.all');
+    var DUR=reduce?150:1400, MAXD=420, LEAD=70, start=null, finished=false;
+    function outExpo(x){return x>=1?1:1-Math.pow(2,-10*x)}
+    function outCubic(x){return 1-Math.pow(1-x,3)}
+    function frame(t){
+      if(!start) start=t;
+      var raw=Math.min(1,(t-start)/DUR), draw=outCubic(Math.min(1,raw/0.75)), pull=raw<0.3?0:outCubic((raw-0.3)/0.7);
+      var d=draw*MAXD;
+      tips.forEach(function(m){m.style.strokeDasharray=Math.min(MAXD,d+LEAD)+' 4000'});
+      bodies.forEach(function(m){m.style.strokeDasharray=d+' 4000'});
+      var k=1-pull;
+      gs.forEach(function(g,i){var D=DIGITS[i];
+        g.setAttribute('transform','translate('+(D.dx*k)+' '+(D.dy*k)+') rotate('+(D.r*k)+' '+D.x+' 130)')});
+      var sc=1+0.9*k;
+      all.setAttribute('transform','translate(300 130) scale('+sc+') translate(-300 -130)');
+      if(raw<1) requestAnimationFrame(frame);
+      else {
+        tips.forEach(function(m){m.style.strokeDasharray='none';m.setAttribute('fill','#fff')});
+        bodies.forEach(function(m){m.style.strokeDasharray='none';m.setAttribute('fill','#fff')});
+        setTimeout(finish,reduce?0:300);
+      }
+    }
+    function finish(){
+      if(finished) return; finished=true;
+      document.body.classList.add('intro');
+      el.classList.add('out');
+      setTimeout(function(){el.remove()},reduce?0:650);
+    }
+    el.addEventListener('click',finish);
+    var go=function(){requestAnimationFrame(frame)};
+    var fontReady=document.fonts&&document.fonts.load?document.fonts.load('230px Yellowtail'):Promise.resolve();
+    Promise.race([fontReady,new Promise(function(r){setTimeout(r,1200)})]).then(go,go);
+  }
+  run();
+  document.getElementById('replay').addEventListener('click',function(){scrollTo(0,0);run()});
+})();
+</script>
+</body>
+</html>
