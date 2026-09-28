@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>561 Coffee</title>
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pre")</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Yellowtail&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Kaushan+Script&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
   --paper:#F5E4D2;
@@ -48,7 +49,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;line-height:.95;margin:0;tex
 /* nav */
 nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-20px;padding:14px 20px}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-family:"Yellowtail","Brush Script MT",cursive;font-weight:400;font-size:34px;line-height:1;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo{font-family:"Kaushan Script","Brush Script MT",cursive;font-weight:400;font-size:30px;line-height:1;text-decoration:none;display:flex;align-items:center;gap:8px}
 .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--cherry)}
 nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0;font-weight:600;font-size:15px}
 nav ul a{text-decoration:none}
@@ -69,9 +70,9 @@ nav ul a:hover{color:var(--cobalt)}
 .beans{position:absolute;inset:0;z-index:-1;pointer-events:none}
 .bean{position:absolute;left:50%;top:45%;width:var(--w,54px);aspect-ratio:1/1.35;margin:calc(var(--w,54px)/-2) 0 0 calc(var(--w,54px)/-2);border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#8a5634,#4a2a18 70%);box-shadow:inset -4px -6px 10px rgba(0,0,0,.35);transform:translate(var(--x),var(--y)) rotate(var(--r));filter:blur(var(--b,0px))}
 .bean::after{content:"";position:absolute;left:44%;top:10%;width:18%;height:80%;border-left:3px solid #2a170d;border-radius:50%}
-body.intro .l1{animation:wipe .8s .35s cubic-bezier(.7,0,.2,1) both}
-body.intro .l2{animation:box .8s .15s cubic-bezier(.7,0,.2,1) both}
-body.intro .hero p,body.intro .hero .btn{animation:fadeup .7s .7s ease both}
+body.intro .l1{animation:wipe .8s .2s cubic-bezier(.7,0,.2,1) both}
+body.intro .l2{animation:box .8s .05s cubic-bezier(.7,0,.2,1) both}
+body.intro .hero p,body.intro .hero .btn{animation:fadeup .7s .45s ease both}
 body.intro .bean{animation:burst 1.3s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
 @keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 @keyframes box{from{clip-path:inset(0 50% 0 50%);transform:rotate(0) scale(.9)}to{clip-path:inset(0 0 0 0);transform:rotate(-3deg)}}
@@ -149,9 +150,12 @@ section{padding-block:80px}
 
 /* splash */
 .replay{font:inherit;color:inherit;background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-#splash{position:fixed;inset:0;z-index:100;background:#45291A;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .6s ease}
-#splash.out{opacity:0;pointer-events:none}
-#splash svg{width:min(62vw,560px);height:auto;overflow:visible}
+html.pre body{background:#45291A}
+html.pre body>*:not(#splash){visibility:hidden}
+#splash{position:fixed;inset:0;z-index:100;background:#45291A;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
+#splash .mark{display:flex;align-items:baseline;font-family:"Kaushan Script","Brush Script MT",cursive;font-size:min(27vw,320px);line-height:1.1;color:#FCE1CD;opacity:0;user-select:none}
+#splash.go .mark{opacity:1}
+#splash .mark span{display:inline-block;padding:0 .04em;will-change:transform,filter,opacity}
 
 footer{border-top:1px solid var(--line);padding-block:28px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;color:var(--ink-soft)}
 </style>
@@ -314,55 +318,42 @@ footer{border-top:1px solid var(--line);padding-block:28px 40px;display:flex;jus
 <script>
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var FONT='font-family="Yellowtail, \'Brush Script MT\', cursive" font-size="230" text-anchor="middle"';
-  // each digit starts big, spread out and tilted, then pulls together into the logo
-  var DIGITS=[{c:'5',x:195,dx:-150,dy:-60,r:-18},{c:'6',x:305,dx:20,dy:90,r:14},{c:'1',x:405,dx:170,dy:-80,r:22}];
+  var EASE='cubic-bezier(.16,1,.3,1)';
+  // each digit starts huge, scattered, blurred and caramel, then glides into place and turns cream
+  var FROM=[{x:-38,y:-26,r:-24},{x:4,y:34,r:18},{x:40,y:-22,r:28}];
   function run(){
     var old=document.getElementById('splash'); if(old) old.remove();
     document.body.classList.remove('intro');
+    if(reduce){document.body.classList.add('intro');return}
     var el=document.createElement('div');
     el.id='splash'; el.setAttribute('role','status'); el.setAttribute('aria-label','Loading 561 Coffee');
-    var defs='', groups='';
-    DIGITS.forEach(function(d,i){
-      var t='<text x="'+d.x+'" y="190" '+FONT;
-      defs+='<mask id="mT'+i+'" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1400" height="1100">'+t+' fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" class="mk tip">'+d.c+'</text></mask>'+
-            '<mask id="mB'+i+'" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1400" height="1100">'+t+' fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" class="mk body">'+d.c+'</text></mask>';
-      groups+='<g class="dg">'+t+' fill="#E3A458" mask="url(#mT'+i+')">'+d.c+'</text>'+t+' fill="#FCE1CD" mask="url(#mB'+i+')">'+d.c+'</text></g>';
-    });
-    el.innerHTML='<svg viewBox="0 0 600 260" aria-hidden="true"><defs>'+defs+'</defs><g class="all">'+groups+'</g></svg>';
+    el.innerHTML='<div class="mark" aria-hidden="true"><span>5</span><span>6</span><span>1</span></div>';
     document.body.appendChild(el);
-    var tips=el.querySelectorAll('.mk.tip'), bodies=el.querySelectorAll('.mk.body'), gs=el.querySelectorAll('.dg'), all=el.querySelector('.all');
-    var DUR=reduce?150:1400, MAXD=420, LEAD=70, start=null, finished=false;
-    function outExpo(x){return x>=1?1:1-Math.pow(2,-10*x)}
-    function outCubic(x){return 1-Math.pow(1-x,3)}
-    function frame(t){
-      if(!start) start=t;
-      var raw=Math.min(1,(t-start)/DUR), draw=outCubic(Math.min(1,raw/0.75)), pull=raw<0.3?0:outCubic((raw-0.3)/0.7);
-      var d=draw*MAXD;
-      tips.forEach(function(m){m.style.strokeDasharray=Math.min(MAXD,d+LEAD)+' 4000'});
-      bodies.forEach(function(m){m.style.strokeDasharray=d+' 4000'});
-      var k=1-pull;
-      gs.forEach(function(g,i){var D=DIGITS[i];
-        g.setAttribute('transform','translate('+(D.dx*k)+' '+(D.dy*k)+') rotate('+(D.r*k)+' '+D.x+' 130)')});
-      var sc=1+0.9*k;
-      all.setAttribute('transform','translate(300 130) scale('+sc+') translate(-300 -130)');
-      if(raw<1) requestAnimationFrame(frame);
-      else {
-        tips.forEach(function(m){m.style.strokeDasharray='none';m.setAttribute('fill','#fff')});
-        bodies.forEach(function(m){m.style.strokeDasharray='none';m.setAttribute('fill','#fff')});
-        setTimeout(finish,reduce?0:300);
-      }
-    }
+    document.documentElement.classList.remove('pre');
+    var mark=el.querySelector('.mark'), spans=mark.querySelectorAll('span'), done=false, timers=[];
     function finish(){
-      if(finished) return; finished=true;
+      if(done) return; done=true; timers.forEach(clearTimeout);
       document.body.classList.add('intro');
-      el.classList.add('out');
-      setTimeout(function(){el.remove()},reduce?0:650);
+      mark.animate([{opacity:1,transform:'scale(1)',filter:'blur(0)'},{opacity:0,transform:'scale(.9)',filter:'blur(8px)'}],{duration:320,easing:'ease-in',fill:'forwards'});
+      el.animate([{backgroundColor:'rgba(69,41,26,1)'},{backgroundColor:'rgba(69,41,26,0)'}],{duration:650,delay:140,easing:'ease-in-out',fill:'forwards'})
+        .finished.then(function(){el.remove()},function(){el.remove()});
+    }
+    function start(){
+      if(done) return;
+      el.classList.add('go');
+      spans.forEach(function(sp,i){
+        var f=FROM[i];
+        sp.animate([
+          {transform:'translate('+f.x+'vw,'+f.y+'vh) rotate('+f.r+'deg) scale(2.6)',filter:'blur(16px)',opacity:0,color:'#E3A458'},
+          {offset:.45,opacity:1,color:'#E3A458'},
+          {transform:'none',filter:'blur(0)',opacity:1,color:'#FCE1CD'}
+        ],{duration:1150,delay:i*80,easing:EASE,fill:'both'});
+      });
+      timers.push(setTimeout(finish,1100));
     }
     el.addEventListener('click',finish);
-    var go=function(){requestAnimationFrame(frame)};
-    var fontReady=document.fonts&&document.fonts.load?document.fonts.load('230px Yellowtail'):Promise.resolve();
-    Promise.race([fontReady,new Promise(function(r){setTimeout(r,1200)})]).then(go,go);
+    var ready=document.fonts&&document.fonts.load?document.fonts.load('400 100px "Kaushan Script"'):Promise.resolve();
+    Promise.race([ready,new Promise(function(r){setTimeout(r,2500)})]).then(start,start);
   }
   run();
   document.getElementById('replay').addEventListener('click',function(){scrollTo(0,0);run()});
