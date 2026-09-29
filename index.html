@@ -287,10 +287,10 @@ function frame(t){
   var mode='light';for(var i=0;i<secs.length;i++){var r=secs[i].getBoundingClientRect();if(r.top<=23&&r.bottom>23){mode=secs[i].dataset.nav;break}}
   nav.className=mode==='dark'?'dark':mode==='light'?'light':mode==='clear'?'clear':'';
   if(!reduce){
-    // intro: one fixed-size shot, no zoom. The view simply slides right until the machine is centred
-    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=1.779,Wl=Math.max(W*1.5,H*A),Hl=Wl/A,mc=.727;
+    // intro: the whole photo fills the screen at its natural framing (no zoom). Where the screen is narrower than the photo (phones), the view slides right to the machine
+    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=1.779,Wl=Math.max(W,H*A),Hl=Wl/A,mc=.727;
     hA.style.width=Wl+'px';hA.style.height=Hl+'px';
-    var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=clamp(H-.96*Hl,H-Hl,0);
+    var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=(H-Hl)/2;
     hA.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
     var a=ease(seg(p,0,.4));tA.style.opacity=(1-seg(p,.04,.26)).toFixed(3);tA.style.transform='translateY('+(-a*70)+'vh)';cue.style.opacity=(1-seg(p,0,.08)).toFixed(3);
     var b=ease(seg(p,.62,.92));tB.style.opacity=b.toFixed(3);tB.style.transform='translateY('+((1-b)*5)+'vh)';
