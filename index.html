@@ -68,10 +68,9 @@ nav a:hover{opacity:.6}
 .shop .kicker{color:#777}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.2vw,16px);margin-top:clamp(40px,7vh,80px);text-align:left}
 .prod{cursor:pointer}
-.grid.bags{grid-template-columns:repeat(5,1fr)}
-.bags .prod .ph{aspect-ratio:.42;background:#d9d2c6}
-.bags+.grid{margin-top:clamp(16px,3vh,32px)}
-.prod .ph{aspect-ratio:.83;overflow:hidden;background:#8e8b87;position:relative}
+.prod .ph .alt{position:absolute;inset:0;opacity:0;transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.75,.15,1)}
+.prod:hover .ph .alt{opacity:1}
+.prod .ph{aspect-ratio:.83;overflow:hidden;background:#b3a38d;position:relative}
 .prod .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.75,.15,1)}
 .prod:hover .ph img{transform:scale(1.05)}
 .prod .ph .tag{position:absolute;left:10px;top:10px;font:700 9px Archivo,sans-serif;letter-spacing:.1em;background:#fff;color:#111;padding:4px 7px}
@@ -151,7 +150,6 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
  .intro .shot{width:86vw;top:26vh}
  .pair{width:100%}
  .grid{grid-template-columns:1fr 1fr}
- .grid.bags{grid-template-columns:repeat(5,58vw);overflow-x:auto;scroll-snap-type:x mandatory}.bags .prod{scroll-snap-align:start}
  .collage .c1{left:15%;width:70%;top:18%}
  .collage .c2{width:26%;left:4%;top:60%}.collage .c3{width:24%;left:72%;top:8%}.collage .c4{width:26%;left:8%;top:78%}.collage .c5{width:30%;left:64%;top:70%}
  .row{flex-wrap:wrap;gap:4px 14px}.row .more{margin-left:0}
@@ -194,17 +192,13 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 <section class="white shop io" id="shop" data-nav="light">
   <p class="kicker serif">Five coffees, one roaster</p>
   <h2 class="huge"><span class="ln"><span>Roasted</span></span><span class="ln"><span>this week</span></span></h2>
-  <div class="grid bags">
-    <article class="prod rv"><div class="ph"><img src="assets/signature.jpg" alt="561 Coffee Signature Blend bag" loading="lazy"></div><div class="meta"><div><h3>Signature Blend</h3><p>Chocolate, caramel, balanced</p></div><div class="pr">from <u>$18</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/ocean.jpg" alt="561 Coffee Ocean Roast bag" loading="lazy"></div><div class="meta"><div><h3>Ocean Roast</h3><p>Citrus, nutty, smooth</p></div><div class="pr">from <u>$19</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/colombian.jpg" alt="561 Coffee Colombian Reserve bag" loading="lazy"></div><div class="meta"><div><h3>Colombian Reserve</h3><p>Fruity, bright, clean</p></div><div class="pr">from <u>$21</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/espresso.jpg" alt="561 Coffee Espresso Roast bag" loading="lazy"></div><div class="meta"><div><h3>Espresso Roast</h3><p>Bold, rich, chocolatey</p></div><div class="pr">from <u>$19</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/decaf.jpg" alt="561 Coffee Decaf Blend bag" loading="lazy"></div><div class="meta"><div><h3>Decaf Blend</h3><p>Smooth, nutty, mellow</p></div><div class="pr">from <u>$18</u></div></div></article>
-  </div>
   <div class="grid">
-    <article class="prod rv"><div class="ph"><img src="assets/mug-side.jpg" alt="561 ceramic mug on an espresso puck" loading="lazy"><span class="tag">NEW</span></div><div class="meta"><div><h3>561 Mug</h3><p>Glazed ceramic, 12 oz</p></div><div class="pr"><u>$24</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/bean.jpg" alt="A single roasted coffee bean" loading="lazy"></div><div class="meta"><div><h3>Brew Box</h3><p>Any three coffees, 3 x 12 oz</p></div><div class="pr"><u>$52</u></div></div></article>
-    <article class="prod rv"><div class="ph"><img src="assets/foam.jpg" alt="Microfoam on a flat white" loading="lazy"></div><div class="meta"><div><h3>Gift Card</h3><p>Any amount, never expires</p></div><div class="pr">from <u>$25</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/signature.jpg" alt="561 Coffee Signature Blend" loading="lazy"><img class="alt" src="assets/signature-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Signature Blend</h3><p>Chocolate, caramel, balanced</p></div><div class="pr">from <u>$18</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/ocean.jpg" alt="561 Coffee Ocean Roast" loading="lazy"><img class="alt" src="assets/ocean-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Ocean Roast</h3><p>Citrus, nutty, smooth</p></div><div class="pr">from <u>$19</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/colombian.jpg" alt="561 Coffee Colombian Reserve" loading="lazy"><img class="alt" src="assets/colombian-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Colombian Reserve</h3><p>Fruity, bright, clean</p></div><div class="pr">from <u>$21</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/espresso.jpg" alt="561 Coffee Espresso Roast" loading="lazy"><img class="alt" src="assets/espresso-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Espresso Roast</h3><p>Bold, rich, chocolatey</p></div><div class="pr">from <u>$19</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/decaf.jpg" alt="561 Coffee Decaf Blend" loading="lazy"><img class="alt" src="assets/decaf-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Decaf Blend</h3><p>Smooth, nutty, mellow</p></div><div class="pr">from <u>$18</u></div></div></article>
+    <article class="prod rv"><div class="ph"><img src="assets/pack.jpg" alt="561 Coffee Brew Box" loading="lazy"><img class="alt" src="assets/pack-2.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Brew Box</h3><p>Any three coffees, 3 x 12 oz</p></div><div class="pr"><u>$52</u></div></div></article>
   </div>
   <a class="btn" href="#shop" style="opacity:1;transform:none">Shop all</a>
 </section>
