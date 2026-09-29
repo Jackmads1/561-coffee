@@ -349,8 +349,6 @@ requestAnimationFrame(frame);
   (function t(){var r=wrap.getBoundingClientRect(),q=dist?clamp(-r.top/(dist*1.6),0,1):0;tr.style.transform='translateX('+(-q*dist).toFixed(1)+'px)';bar.style.transform='scaleX('+q.toFixed(4)+')';requestAnimationFrame(t)})();
 })();
 
-})();
-
 // hero dot field: tiny faint dots that get pushed aside by the cursor and spring back
 (function(){
   var c=document.getElementById('dots'),hero=document.getElementById('dotzone'),g=c.getContext('2d');
