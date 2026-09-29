@@ -168,9 +168,15 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
  .ft{grid-template-columns:1fr 1fr}.ft .logo{grid-column:1/-1;grid-row:1;justify-self:center}
 }
 @media (prefers-reduced-motion: reduce){.huge .ln>span,.sub,.btn,.rv{transition:none;transform:none;opacity:1}}
+
+/* custom cursor: hollow ring */
+#ring{position:fixed;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border:1px solid #fff;border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference;opacity:0;transition:width .25s,height .25s,margin .25s,opacity .3s}
+#ring.on{opacity:1}#ring.big{width:48px;height:48px;margin:-24px 0 0 -24px}
+@media (hover:hover) and (pointer:fine){html.ringed,html.ringed *{cursor:none!important}}
 </style>
 </head>
 <body>
+<div id="ring" aria-hidden="true"></div>
 <div id="splash" aria-hidden="true"><div class="sp-bg"></div><div class="sp-card"><img src="assets/splash-latte.jpg" alt=""></div><div class="sp-word logo">561</div></div>
 
 <nav id="nav">
@@ -326,6 +332,16 @@ function frame(t){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+// hollow ring cursor (mouse only)
+(function(){
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  var r=document.getElementById('ring'),x=-100,y=-100,cx=-100,cy=-100;document.documentElement.classList.add('ringed');
+  addEventListener('pointermove',function(e){x=e.clientX;y=e.clientY;if(!r.classList.contains('on')){cx=x;cy=y;r.classList.add('on')}});
+  document.addEventListener('mouseleave',function(){r.classList.remove('on')});
+  document.addEventListener('mouseover',function(e){r.classList.toggle('big',!!e.target.closest('a,button,.marq b'))});
+  (function t(){cx+=(x-cx)*(reduce?1:.28);cy+=(y-cy)*(reduce?1:.28);r.style.transform='translate('+cx.toFixed(1)+'px,'+cy.toFixed(1)+'px)';requestAnimationFrame(t)})();
+})();
+
 // hero dot field: tiny faint dots that get pushed aside by the cursor and spring back
 (function(){
   var c=document.getElementById('dots'),hero=document.getElementById('dotzone'),g=c.getContext('2d');
