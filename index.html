@@ -76,7 +76,11 @@ nav a:hover{opacity:.55}
 .white{background:var(--paper);color:var(--ink)}
 .shop{padding:clamp(80px,12vh,140px) clamp(14px,2.5vw,36px) clamp(70px,10vh,120px);text-align:center}
 .shop .kicker{color:#8a7662}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.2vw,16px);margin-top:clamp(40px,7vh,80px);text-align:left}
+.hwrap{position:relative;margin:clamp(30px,5vh,60px) calc(-1*clamp(14px,2.5vw,36px)) 0}
+.hpin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(50px,5vw,80px);box-sizing:border-box}
+.grid{display:flex;gap:clamp(10px,1.4vw,20px);padding:0 clamp(14px,2.5vw,36px);width:max-content;text-align:left;will-change:transform}
+.grid .prod{flex:none;width:calc(min(64vh,62svh) * .66)}
+.hbar{margin:clamp(14px,3vh,28px) clamp(14px,2.5vw,36px) 0;height:1px;background:#ddcfbc;position:relative}.hbar i{position:absolute;left:0;top:0;height:100%;width:100%;background:var(--ink);transform-origin:0 50%;transform:scaleX(0)}
 .prod{cursor:pointer}
 .prod .ph .alt{position:absolute;inset:0;opacity:0;transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.75,.15,1)}
 .prod:hover .ph .alt{opacity:1}
@@ -161,7 +165,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
  #top.hero .huge{font-size:10.4vw}
  nav .l a:nth-child(n+3),nav .lang a:not(.on){display:none}
  .pair{width:calc(100% - 24px);gap:10px}
- .grid{grid-template-columns:1fr 1fr}
+ .grid .prod{width:68vw}
  .row{flex-wrap:wrap;gap:4px 14px}.row .more{margin-left:0}
  .list{grid-template-columns:1fr}
  .boxes{grid-template-columns:1fr}.boxes>div{border-right:0;border-bottom:1px solid var(--line)}.boxes>div:last-child{border-bottom:0}
@@ -201,14 +205,14 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 <section class="white shop io" id="shop" data-nav="light">
   <p class="kicker serif">Five coffees, one roaster</p>
   <h2 class="huge"><span class="ln"><span>Roasted</span></span><span class="ln"><span>this week</span></span></h2>
-  <div class="grid">
+  <div class="hwrap" id="hwrap"><div class="hpin"><div class="grid" id="htrack">
     <article class="prod rv"><div class="ph"><img src="assets/s-signature.jpg" alt="561 Coffee Signature Blend" loading="lazy"><img class="alt" src="assets/s-signature-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Signature Blend</h3><p>Chocolate, caramel, balanced</p></div><div class="pr">from <u>$18</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-ocean.jpg" alt="561 Coffee Ocean Roast" loading="lazy"><img class="alt" src="assets/s-ocean-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Ocean Roast</h3><p>Citrus, nutty, smooth</p></div><div class="pr">from <u>$19</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-colombian.jpg" alt="561 Coffee Colombian Reserve" loading="lazy"><img class="alt" src="assets/s-colombian-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Colombian Reserve</h3><p>Fruity, bright, clean</p></div><div class="pr">from <u>$21</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-espresso.jpg" alt="561 Coffee Espresso Roast" loading="lazy"><img class="alt" src="assets/s-espresso-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Espresso Roast</h3><p>Bold, rich, chocolatey</p></div><div class="pr">from <u>$19</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-decaf.jpg" alt="561 Coffee Decaf Blend" loading="lazy"><img class="alt" src="assets/s-decaf-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Decaf Blend</h3><p>Smooth, nutty, mellow</p></div><div class="pr">from <u>$18</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/p-pack.jpg" alt="561 Coffee Brew Box" loading="lazy"><img class="alt" src="assets/p-pack-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Brew Box</h3><p>Any three coffees, 3 x 12 oz</p></div><div class="pr"><u>$52</u></div></div></article>
-  </div>
+  </div><div class="hbar"><i id="hbar"></i></div></div></div>
   <a class="btn" href="#shop" style="opacity:1;transform:none">Shop all</a>
 </section>
 
@@ -332,6 +336,14 @@ function frame(t){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+// shop: pin the bag row and scroll it sideways
+(function(){
+  var wrap=document.getElementById('hwrap'),tr=document.getElementById('htrack'),bar=document.getElementById('hbar'),dist=0;
+  function size(){dist=Math.max(0,tr.scrollWidth-innerWidth);wrap.style.height=(innerHeight+dist*1.6)+'px'}
+  size();addEventListener('resize',size);addEventListener('load',size);
+  (function t(){var r=wrap.getBoundingClientRect(),q=dist?clamp(-r.top/(dist*1.6),0,1):0;tr.style.transform='translateX('+(-q*dist).toFixed(1)+'px)';bar.style.transform='scaleX('+q.toFixed(4)+')';requestAnimationFrame(t)})();
+})();
+
 // hollow ring cursor (mouse only)
 (function(){
   if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
