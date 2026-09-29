@@ -77,12 +77,12 @@ nav a:hover{opacity:.6}
 .prod .pr{font:600 10.5px Archivo,sans-serif;white-space:nowrap}
 .prod .pr u{text-decoration:none;border-bottom:1px solid var(--ink)}
 
-/* collage: five photos, the outer four slide apart while the section holds, then it all scrolls on */
-.collage{position:relative;height:200vh;background:var(--black);--u:min(1vh,1.5vw)}
-@media (max-width:760px){.collage{--u:min(1vh,1.1vw)}}
-.collage .stick{position:sticky;top:0;height:100vh;overflow:hidden}
+/* collage: five photos; the outer four start tucked in and slide outward as it scrolls in, then all move together */
+.collage{background:var(--black);padding:clamp(50px,9vh,100px) 0 0;overflow:hidden;--u:min(1vw,1.6vh)}
+@media (max-width:760px){.collage{--u:1.3vw}}
+.collage .frame{position:relative;height:calc(84*var(--u))}
 .collage figure{position:absolute;margin:0;overflow:hidden;transform:translateX(-50%);will-change:transform}
-.collage figure[data-d="0"]{z-index:0}.collage figure:not([data-d="0"]){z-index:1}
+.collage figure:not([data-d="0"]){z-index:1}
 .collage img{width:100%;height:100%;object-fit:cover}
 #mornings{padding-top:clamp(40px,6vh,70px)}
 #mornings .huge{font-size:clamp(40px,5.2vw,84px)}
@@ -192,12 +192,12 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 </section>
 
 <section class="collage" id="collage" data-nav="dark">
-  <div class="stick">
-    <figure data-d="0" style="left:calc(50% + 0*var(--u));top:calc(50% + -39*var(--u));height:calc(78*var(--u));aspect-ratio:0.545"><img src="assets/col-bowls.jpg" alt="Stacked stone bowls in low sun" loading="lazy"></figure>
-    <figure data-d="-1" style="left:calc(50% + -34*var(--u));top:calc(50% + -36*var(--u));height:calc(26*var(--u));aspect-ratio:0.628"><img src="assets/col-olive.jpg" alt="Olive branch shadow on a plaster wall" loading="lazy"></figure>
-    <figure data-d="1" style="left:calc(50% + 34*var(--u));top:calc(50% + -42*var(--u));height:calc(24*var(--u));aspect-ratio:0.64"><img src="assets/col-glass.jpg" alt="Coffee seen through fluted glass" loading="lazy"></figure>
-    <figure data-d="-1" style="left:calc(50% + -25*var(--u));top:calc(50% + 8*var(--u));height:calc(24*var(--u));aspect-ratio:0.83"><img src="assets/col-splash.jpg" alt="Coffee and milk splashing together" loading="lazy"></figure>
-    <figure data-d="1" style="left:calc(50% + 27*var(--u));top:calc(50% + 4*var(--u));height:calc(27*var(--u));aspect-ratio:0.678"><img src="assets/col-water.jpg" alt="Sunlight on dark water" loading="lazy"></figure>
+  <div class="frame">
+    <figure data-d="0" style="left:calc(50% + 0*var(--u));top:calc(4*var(--u));width:calc(38*var(--u));aspect-ratio:0.545"><img src="assets/col-bowls.jpg" alt="Stacked stone bowls in low sun" loading="lazy"></figure>
+    <figure data-d="-1" style="left:calc(50% + -30*var(--u));top:calc(24*var(--u));width:calc(15*var(--u));aspect-ratio:0.628"><img src="assets/col-olive.jpg" alt="Olive branch shadow on a plaster wall" loading="lazy"></figure>
+    <figure data-d="1" style="left:calc(50% + 31*var(--u));top:calc(8*var(--u));width:calc(13*var(--u));aspect-ratio:0.64"><img src="assets/col-glass.jpg" alt="Coffee seen through fluted glass" loading="lazy"></figure>
+    <figure data-d="-1" style="left:calc(50% + -17*var(--u));top:calc(60*var(--u));width:calc(16*var(--u));aspect-ratio:0.83"><img src="assets/col-splash.jpg" alt="Coffee and milk splashing together" loading="lazy"></figure>
+    <figure data-d="1" style="left:calc(50% + 19*var(--u));top:calc(63*var(--u));width:calc(15*var(--u));aspect-ratio:0.678"><img src="assets/col-water.jpg" alt="Sunlight on dark water" loading="lazy"></figure>
   </div>
 </section>
 
@@ -272,9 +272,10 @@ function frame(){
     var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),e=clamp((H-ir.top)/H,0,1);
     big.style.transform='translate(-50%,'+((1-e)*-60+p*14)+'vh)';
     shot.style.transform='translateX(-50%) translateY('+((1-e)*30-p*10)+'vh) scale('+(1+p*.35)+')';
-    // collage: outer photos spread sideways while pinned, then everything scrolls up together
-    var cr=col.getBoundingClientRect(),cp=clamp(-cr.top/(cr.height-H),0,1),ce=cp<.5?2*cp*cp:1-Math.pow(-2*cp+2,2)/2,sp=innerWidth*(innerWidth<760?.05:.2);
-    figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(+f.dataset.d*ce*sp)+'px))'});
+    // collage: outer photos slide outward while the block scrolls in, then it all moves up together
+    var cr=col.getBoundingClientRect(),ce=clamp((H-cr.top)/(H*.85),0,1);ce=1-Math.pow(1-ce,3);
+    var sp=Math.min(innerWidth*.01,innerHeight*.016)*(innerWidth<760?5:14);
+    figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(-f.dataset.d*(1-ce)*sp)+'px))'});
     pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.12) translateY('+((q-.5)*-8)+'%)'});
     marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/2;m.style.transform='translateX('+(((y*.35*d)%w)-(d>0?w*.5:w*.2))+'px)'});
   }
