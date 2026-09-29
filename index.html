@@ -34,37 +34,22 @@ nav a:hover{opacity:.6}
 .band video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* hero: big 561 over the latte shot */
-.intro{position:relative;height:260vh;background:var(--black)}
-.intro .stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.intro .ly{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
-.intro .ly img{display:block;width:100%;height:100%}
-.intro .tx{position:absolute;left:0;right:0;text-align:center;color:var(--cream);z-index:2;will-change:transform,opacity;text-shadow:0 1px 30px rgba(43,30,22,.25)}
-.intro .ta{top:34%}.intro .ta .logo{font-size:clamp(96px,11vw,170px);line-height:.9;display:block}
-.intro .tag{font:500 12px/1 Archivo,sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:28px}
-.intro .tag i{font-style:normal;margin:0 1.4em;opacity:.8}
-.intro .cue{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);font:500 11px/1 Archivo,sans-serif;letter-spacing:.3em;color:var(--cream);text-align:center;z-index:2}
-.intro .cue span{display:block;width:1px;height:38px;background:currentColor;margin:14px auto 0;transform-origin:top;animation:cue 2.2s ease-in-out infinite}
-@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
-.intro .tb{top:50%;left:7vw;right:auto;text-align:left;opacity:0;margin-top:-120px;max-width:44vw}
-.intro .tb small{display:block;font:500 12px/1 Archivo,sans-serif;letter-spacing:.34em;text-transform:uppercase;margin-bottom:18px}
-.intro .tb h1{font:500 clamp(44px,5vw,84px)/1 'Cormorant Garamond',serif;margin:0;font-variant-numeric:lining-nums}
-.intro .tb a{display:inline-block;margin-top:20px;padding:12px 6px;border-top:1px solid rgba(241,231,216,.6);border-bottom:1px solid rgba(241,231,216,.6);font:500 12px/1 Archivo,sans-serif;letter-spacing:.3em;color:inherit;text-decoration:none}
 nav.clear{background:transparent;color:var(--cream)}
 /* splash (Jack's white-coffee reference): big 561 and a photo card rise from below together, drift up slowly,
    the word leaves first, the card slides off, then the hero text rises in. No colour changes. */
 #splash{position:fixed;inset:0;height:100vh;height:100svh;z-index:200;pointer-events:none;overflow:hidden;animation:spFail 0s 6s forwards}
-#splash .sp-bg{position:absolute;inset:0;background:var(--paper);will-change:transform}
+#splash .sp-bg{position:absolute;inset:0;background:var(--black)}
 #splash .sp-card{position:absolute;left:50%;top:42%;width:min(82vw,1200px);aspect-ratio:1.25;margin-left:calc(min(82vw,1200px)/-2);overflow:hidden;will-change:transform;transform:translateY(110vh)}
 #splash .sp-card img{width:100%;height:100%;object-fit:cover}
-#splash .sp-word{position:absolute;left:0;right:0;top:42%;text-align:center;color:var(--ink);font-size:clamp(140px,28vw,430px);line-height:.8;margin-top:-.62em;will-change:transform;transform:translateY(110vh);z-index:2}
-.intro.pre .ta .logo,.intro.pre .ta .tag{transform:translateY(40px);opacity:0}.intro.pre .cue{opacity:0}
-.intro .ta .logo,.intro .ta .tag{transition:transform 1s cubic-bezier(.16,1,.3,1),opacity .8s ease}.intro .cue{transition:opacity .8s ease .3s}
-.intro .ta .tag{transition-delay:.12s}
+#splash .sp-word{position:absolute;left:0;right:0;top:42%;text-align:center;color:var(--cream);font-size:clamp(140px,28vw,430px);line-height:.8;margin-top:-.62em;will-change:transform;transform:translateY(110vh);z-index:2}
 @keyframes spFail{to{visibility:hidden}}
 @media (max-width:760px){#splash .sp-card{width:88vw;margin-left:-44vw;top:44%}#splash .sp-word{top:44%;font-size:34vw}}
 @media (prefers-reduced-motion: reduce){#splash{display:none}}
 
 /* statement */
+.stmt.hero{min-height:100vh;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:60px;padding-bottom:12vh}
+.stmt.hero .huge{font-size:clamp(56px,9vw,150px)}
+.hero .rv0{opacity:0;transform:translateY(10px);transition:opacity .8s,transform .8s}.hero.in .rv0{opacity:1;transform:none}
 .stmt{text-align:center;padding:clamp(90px,14vh,160px) 20px clamp(80px,12vh,140px);background:var(--black)}
 .kicker{font-size:clamp(17px,1.5vw,22px);color:#d2b48c;margin:0 0 10px}
 .huge{font:900 clamp(46px,7.4vw,118px)/.9 Archivo,sans-serif;letter-spacing:-.035em;text-transform:uppercase;margin:0}
@@ -170,9 +155,8 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 .in.rv,.in .rv{opacity:1;transform:none}
 
 @media (max-width:760px){
+ #top.hero .huge{font-size:10.4vw}
  nav .l a:nth-child(n+3){display:none}
- .intro .ta{top:24%}.intro .tb{top:12%;left:0;right:0;text-align:center;margin-top:0;max-width:none}
- .intro .tag i{margin:0 .6em}.intro .tag{letter-spacing:.28em;font-size:11px}
  .pair{width:calc(100% - 24px);gap:10px}
  .grid{grid-template-columns:1fr 1fr}
  .row{flex-wrap:wrap;gap:4px 14px}.row .more{margin-left:0}
@@ -192,17 +176,9 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <div class="r"><a href="#shop">Bag (0)</a><a href="#spots">EN</a></div>
 </nav>
 
-<section class="intro pre" data-nav="clear" id="top">
-  <div class="stick">
-    <div class="ly" id="hA"><img src="assets/hero-w.jpg" alt="An espresso machine pulling two shots on a stone counter, long olive leaf shadows across a sunlit plaster wall"></div>
-    <div class="tx ta" id="tA"><span class="logo">561</span><div class="tag">Roasted<i>/</i>Poured<i>/</i>Shared</div></div>
-    <div class="cue" id="cue">SCROLL<span></span></div>
-    <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted Weekly<br>in the 561</h1><a href="#shop">SHOP COFFEE</a></div>
-  </div>
-</section>
 
-<section class="stmt io" id="about" data-nav="dark">
-  <p class="kicker serif">This is 561</p>
+<section class="stmt hero" id="top" data-nav="dark"><span id="about"></span>
+  <p class="kicker serif rv0">This is 561</p>
   <h1 class="huge"><span class="ln"><span>Small batch</span></span><span class="ln"><span>coffee from</span></span><span class="ln"><span>the 561</span></span></h1>
   <p class="sub">A roaster built around one area code. We roast every week in small batches and pour it straight, no fuss and no attitude.</p>
   <a class="btn" href="#spots">Our story</a>
@@ -296,7 +272,7 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
 // the cream lifts and the hero text rises in. One timeline, positions in seconds.
 (function(){
   var sp=document.getElementById('splash'),hero=document.getElementById('top');
-  var done=function(){hero.classList.remove('pre')};
+  var done=function(){hero.classList.add('in')};
   if(!sp){done();return}
   if(reduce){sp.remove();done();return}
   sp.style.animation='none';
@@ -304,14 +280,14 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
   var card=sp.querySelector('.sp-card'),word=sp.querySelector('.sp-word'),bg=sp.querySelector('.sp-bg'),T0=0,released=false;
   function oc(x){return 1-Math.pow(1-x,3)}function ic(x){return x*x*x}function io(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
   function k(t,a,b){return Math.min(1,Math.max(0,(t-a)/(b-a)))}
-  var RISE=[.25,1.25],DRIFT=[1.25,2.5],WOUT=[2.5,3.05],COUT=[2.6,3.3],BG=[3.05,3.65];
+  var RISE=[.25,1.25],DRIFT=[1.25,2.5],WOUT=[2.5,3.05],COUT=[2.6,3.3],BG=[3.2,3.45];
   function tick(now){
     if(!T0)T0=now;var t=(now-T0)/1000,H=innerHeight;
     var base=(1-oc(k(t,RISE[0],RISE[1])))*1.1*H - k(t,DRIFT[0],DRIFT[1])*.07*H - (t>DRIFT[1]?(t-DRIFT[1])*.056*H:0);
     word.style.transform='translate3d(0,'+(base-ic(k(t,WOUT[0],WOUT[1]))*.9*H).toFixed(1)+'px,0)';
     card.style.transform='translate3d(0,'+(base*1.04-ic(k(t,COUT[0],COUT[1]))*1.5*H).toFixed(1)+'px,0)';
-    bg.style.transform='translate3d(0,'+(-io(k(t,BG[0],BG[1]))*100)+'%,0)';
-    if(t>3.3&&!released){released=true;done();document.documentElement.style.overflow='';if(lenis)lenis.start()}
+    sp.style.opacity=(1-k(t,BG[0],BG[1])).toFixed(3);
+    if(t>3.15&&!released){released=true;done();document.documentElement.style.overflow='';if(lenis)lenis.start()}
     if(t<BG[1])requestAnimationFrame(tick);else sp.remove();
   }
   var started=false,start=function(){if(!started){started=true;requestAnimationFrame(tick)}};
@@ -326,7 +302,6 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
 document.querySelectorAll('.io,.rv').forEach(function(el){io.observe(el)});
 // nav colour follows the section underneath
 var nav=document.getElementById('nav'),secs=[].slice.call(document.querySelectorAll('[data-nav]'));
-var intro=document.getElementById('top'),hA=document.getElementById('hA'),tA=document.getElementById('tA'),tB=document.getElementById('tB'),cue=document.getElementById('cue');
 function seg(p,a,b){return clamp((p-a)/(b-a),0,1)}function ease(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2}
 var col=document.getElementById('collage'),figs=[].slice.call(col.querySelectorAll('figure')),cx=0;
 var pxs=[].slice.call(document.querySelectorAll('.px')),marqs=[].slice.call(document.querySelectorAll('.marq div'));
@@ -337,13 +312,6 @@ function frame(t){
   var mode='light';for(var i=0;i<secs.length;i++){var r=secs[i].getBoundingClientRect();if(r.top<=23&&r.bottom>23){mode=secs[i].dataset.nav;break}}
   nav.className=mode==='dark'?'dark':mode==='light'?'light':mode==='clear'?'clear':'';
   if(!reduce){
-    // intro: the whole photo fills the screen at its natural framing (no zoom). Where the screen is narrower than the photo (phones), the view slides right to the machine
-    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=2.525,Wl=Math.max(W,H*A),Hl=Wl/A,mc=.775;
-    hA.style.width=Wl+'px';hA.style.height=Hl+'px';
-    var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=(H-Hl)/2;
-    hA.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
-    var a=ease(seg(p,0,.4));tA.style.opacity=(1-seg(p,.04,.26)).toFixed(3);tA.style.transform='translateY('+(-a*70)+'vh)';cue.style.opacity=(1-seg(p,0,.08)).toFixed(3);
-    var b=ease(seg(p,.62,.92));tB.style.opacity=b.toFixed(3);tB.style.transform='translateY('+((1-b)*5)+'vh)';
     // collage: outer photos drift outward slowly and steadily the whole time the block is on screen (eased)
     var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
     cx+=((cq-.35)*sp-cx)*.09;
