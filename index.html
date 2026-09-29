@@ -174,7 +174,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 <section class="intro" data-nav="clear" id="top">
   <div class="stick">
-    <div class="ly" id="hA"><img src="assets/hero-c.jpg" alt="An espresso machine pulling two shots on a stone counter, long olive leaf shadows across a sunlit plaster wall"></div>
+    <div class="ly" id="hA"><img src="assets/hero-w.jpg" alt="An espresso machine pulling two shots on a stone counter, long olive leaf shadows across a sunlit plaster wall"></div>
     <div class="tx ta" id="tA"><span class="logo">561</span><div class="tag">Roasted<i>/</i>Poured<i>/</i>Shared</div></div>
     <div class="cue" id="cue">SCROLL<span></span></div>
     <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted Weekly<br>in the 561</h1><a href="#shop">SHOP COFFEE</a></div>
@@ -288,7 +288,7 @@ function frame(t){
   nav.className=mode==='dark'?'dark':mode==='light'?'light':mode==='clear'?'clear':'';
   if(!reduce){
     // intro: the whole photo fills the screen at its natural framing (no zoom). Where the screen is narrower than the photo (phones), the view slides right to the machine
-    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=1.779,Wl=Math.max(W,H*A),Hl=Wl/A,mc=.727;
+    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=2.525,Wl=Math.max(W,H*A),Hl=Wl/A,mc=.775;
     hA.style.width=Wl+'px';hA.style.height=Hl+'px';
     var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=(H-Hl)/2;
     hA.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
