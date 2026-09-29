@@ -80,7 +80,7 @@ nav a:hover{opacity:.6}
 /* collage: five photos; the outer four start tucked in and slide outward as it scrolls in, then all move together */
 .collage{background:var(--black);padding:clamp(50px,9vh,100px) 0 0;overflow:hidden;--u:min(1vw,1.6vh)}
 @media (max-width:760px){.collage{--u:1.3vw}}
-.collage .frame{position:relative;height:calc(84*var(--u))}
+.collage .frame{position:relative;height:calc(74*var(--u))}
 .collage figure{position:absolute;margin:0;overflow:hidden;transform:translateX(-50%);will-change:transform}
 .collage figure:not([data-d="0"]){z-index:1}
 .collage img{width:100%;height:100%;object-fit:cover}
@@ -193,11 +193,11 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 <section class="collage" id="collage" data-nav="dark">
   <div class="frame">
-    <figure data-d="0" style="left:calc(50% + 0*var(--u));top:calc(4*var(--u));width:calc(38*var(--u));aspect-ratio:0.545"><img src="assets/col-bowls.jpg" alt="Stacked stone bowls in low sun" loading="lazy"></figure>
+    <figure data-d="0" style="left:calc(50% + 0*var(--u));top:calc(4*var(--u));width:calc(38*var(--u));aspect-ratio:0.675"><img src="assets/col-machine.jpg" alt="Espresso machine pulling two shots in warm afternoon light" loading="lazy"></figure>
     <figure data-d="-1" style="left:calc(50% + -30*var(--u));top:calc(24*var(--u));width:calc(15*var(--u));aspect-ratio:0.628"><img src="assets/col-olive.jpg" alt="Olive branch shadow on a plaster wall" loading="lazy"></figure>
     <figure data-d="1" style="left:calc(50% + 31*var(--u));top:calc(8*var(--u));width:calc(13*var(--u));aspect-ratio:0.64"><img src="assets/col-glass.jpg" alt="Coffee seen through fluted glass" loading="lazy"></figure>
-    <figure data-d="-1" style="left:calc(50% + -17*var(--u));top:calc(60*var(--u));width:calc(16*var(--u));aspect-ratio:0.83"><img src="assets/col-splash.jpg" alt="Coffee and milk splashing together" loading="lazy"></figure>
-    <figure data-d="1" style="left:calc(50% + 19*var(--u));top:calc(63*var(--u));width:calc(15*var(--u));aspect-ratio:0.678"><img src="assets/col-water.jpg" alt="Sunlight on dark water" loading="lazy"></figure>
+    <figure data-d="-1" style="left:calc(50% + -17*var(--u));top:calc(47*var(--u));width:calc(16*var(--u));aspect-ratio:0.83"><img src="assets/col-splash.jpg" alt="Coffee and milk splashing together" loading="lazy"></figure>
+    <figure data-d="1" style="left:calc(50% + 19*var(--u));top:calc(50*var(--u));width:calc(15*var(--u));aspect-ratio:0.678"><img src="assets/col-water.jpg" alt="Sunlight on dark water" loading="lazy"></figure>
   </div>
 </section>
 
