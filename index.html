@@ -39,14 +39,13 @@ nav a:hover{opacity:.6}
 .intro .ly{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 .intro .ly img{display:block;width:100%;height:100%}
 .intro .tx{position:absolute;left:0;right:0;text-align:center;color:var(--cream);z-index:2;will-change:transform,opacity;text-shadow:0 1px 30px rgba(43,30,22,.25)}
-.intro .ta{top:31%;left:0;right:auto;width:56%}.intro .ta .logo{font-size:clamp(96px,11vw,170px);line-height:.9;display:block}
+.intro .ta{top:34%}.intro .ta .logo{font-size:clamp(96px,11vw,170px);line-height:.9;display:block}
 .intro .tag{font:500 12px/1 Archivo,sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:28px}
 .intro .tag i{font-style:normal;margin:0 1.4em;opacity:.8}
 .intro .cue{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);font:500 11px/1 Archivo,sans-serif;letter-spacing:.3em;color:var(--cream);text-align:center;z-index:2}
 .intro .cue span{display:block;width:1px;height:38px;background:currentColor;margin:14px auto 0;transform-origin:top;animation:cue 2.2s ease-in-out infinite}
-#cue{left:28%}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
-.intro .tb{top:7.5%;opacity:0}
+.intro .tb{top:50%;left:7vw;right:auto;text-align:left;opacity:0;margin-top:-120px;max-width:44vw}
 .intro .tb small{display:block;font:500 12px/1 Archivo,sans-serif;letter-spacing:.34em;text-transform:uppercase;margin-bottom:18px}
 .intro .tb h1{font:500 clamp(44px,5vw,84px)/1 'Cormorant Garamond',serif;margin:0;font-variant-numeric:lining-nums}
 .intro .tb a{display:inline-block;margin-top:20px;padding:12px 6px;border-top:1px solid rgba(241,231,216,.6);border-bottom:1px solid rgba(241,231,216,.6);font:500 12px/1 Archivo,sans-serif;letter-spacing:.3em;color:inherit;text-decoration:none}
@@ -153,7 +152,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 @media (max-width:760px){
  nav .l a:nth-child(n+3){display:none}
- .intro .ta{width:auto;right:0}#cue{left:50%}.intro .tb{top:13%}
+ .intro .ta{top:24%}.intro .tb{top:12%;left:0;right:0;text-align:center;margin-top:0;max-width:none}
  .intro .tag i{margin:0 .6em}.intro .tag{letter-spacing:.28em;font-size:11px}
  .pair{width:calc(100% - 24px);gap:10px}
  .grid{grid-template-columns:1fr 1fr}
@@ -175,7 +174,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 <section class="intro" data-nav="clear" id="top">
   <div class="stick">
-    <div class="ly" id="hA"><img src="assets/hero-b.jpg" alt="An espresso machine pulling two shots on a stone counter in warm light, olive leaf shadows on the wall"></div>
+    <div class="ly" id="hA"><img src="assets/hero-c.jpg" alt="An espresso machine pulling two shots on a stone counter, long olive leaf shadows across a sunlit plaster wall"></div>
     <div class="tx ta" id="tA"><span class="logo">561</span><div class="tag">Roasted<i>/</i>Poured<i>/</i>Shared</div></div>
     <div class="cue" id="cue">SCROLL<span></span></div>
     <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted Weekly<br>in the 561</h1><a href="#shop">SHOP COFFEE</a></div>
@@ -289,12 +288,12 @@ function frame(t){
   nav.className=mode==='dark'?'dark':mode==='light'?'light':mode==='clear'?'clear':'';
   if(!reduce){
     // intro: one fixed-size shot, no zoom. The view simply slides right until the machine is centred
-    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=1.779,Wl=Math.max(W*1.35,H*A),Hl=Wl/A;
+    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=1.779,Wl=Math.max(W*1.5,H*A),Hl=Wl/A,mc=.727;
     hA.style.width=Wl+'px';hA.style.height=Hl+'px';
-    var z=ease(seg(p,0,.85)),tx=-(Wl/2-W/2)*z,ty=clamp(H-.97*Hl,H-Hl,0);
+    var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=clamp(H-.96*Hl,H-Hl,0);
     hA.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
-    var a=seg(p,0,.25);tA.style.opacity=(1-a).toFixed(3);tA.style.transform='translateY('+(-a*6)+'vh)';cue.style.opacity=(1-seg(p,0,.08)).toFixed(3);
-    var b=ease(seg(p,.6,.9));tB.style.opacity=b.toFixed(3);tB.style.transform='translateY('+((1-b)*5)+'vh)';
+    var a=ease(seg(p,0,.4));tA.style.opacity=(1-seg(p,.04,.26)).toFixed(3);tA.style.transform='translateY('+(-a*70)+'vh)';cue.style.opacity=(1-seg(p,0,.08)).toFixed(3);
+    var b=ease(seg(p,.62,.92));tB.style.opacity=b.toFixed(3);tB.style.transform='translateY('+((1-b)*5)+'vh)';
     // collage: outer photos drift outward slowly and steadily the whole time the block is on screen (eased)
     var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
     cx+=((cq-.35)*sp-cx)*.09;
