@@ -81,12 +81,8 @@ nav a:hover{opacity:.6}
 .collage{position:relative;height:230vh;background:var(--black)}
 .collage .stick{position:sticky;top:0;height:100vh;overflow:hidden}
 .collage figure{position:absolute;margin:0;overflow:hidden;will-change:transform}
-.collage img{width:100%;height:100%;object-fit:cover;filter:sepia(.45) saturate(1.1)}
-.collage .c1{left:30%;top:14%;width:40%;aspect-ratio:.72}
-.collage .c2{left:6%;top:36%;width:14%;aspect-ratio:.8}
-.collage .c3{left:74%;top:10%;width:14%;aspect-ratio:.85}
-.collage .c4{left:22%;top:70%;width:15%;aspect-ratio:1}
-.collage .c5{left:68%;top:62%;width:16%;aspect-ratio:1.1}
+.collage img{width:100%;height:100%;object-fit:cover}
+.collage .frame{position:absolute;left:50%;top:50%;width:min(100vw,150vh);aspect-ratio:1.5;transform:translate(-50%,-50%)}
 .collage .msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px;z-index:3;opacity:0;pointer-events:none}
 .collage .msg .huge{font-size:clamp(40px,5.2vw,84px)}
 .collage .msg .sub{color:#cbb79f}
@@ -148,8 +144,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
  .intro .big{top:10vh}
  .pair{width:100%}
  .grid{grid-template-columns:1fr 1fr}
- .collage .c1{left:15%;width:70%;top:18%}
- .collage .c2{width:26%;left:4%;top:60%}.collage .c3{width:24%;left:72%;top:8%}.collage .c4{width:26%;left:8%;top:78%}.collage .c5{width:30%;left:64%;top:70%}
+ .collage .frame{width:170vw}
  .row{flex-wrap:wrap;gap:4px 14px}.row .more{margin-left:0}
  .list{grid-template-columns:1fr}
  .boxes{grid-template-columns:1fr}.boxes>div{border-right:0;border-bottom:1px solid var(--line)}.boxes>div:last-child{border-bottom:0}
@@ -199,11 +194,18 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 <section class="collage" id="collage" data-nav="dark">
   <div class="stick">
-    <figure class="c1" data-y="-.35"><img src="assets/mug-top.jpg" alt=""></figure>
-    <figure class="c2" data-y="-.9"><img src="assets/bean.jpg" alt=""></figure>
-    <figure class="c3" data-y="-1.2"><img src="assets/tamper.jpg" alt=""></figure>
-    <figure class="c4" data-y="-1.5"><img src="assets/foam.jpg" alt=""></figure>
-    <figure class="c5" data-y="-1.1"><img src="assets/puck.jpg" alt=""></figure>
+    <div class="frame">
+    <figure data-y="-.25" style="left:31.49%;top:3.05%;width:23.49%;aspect-ratio:0.599"><img src="assets/col-land.jpg" alt="Hills and water at golden hour" loading="lazy"></figure>
+    <figure data-y="-.7" style="left:3.23%;top:12.74%;width:14.52%;aspect-ratio:0.586"><img src="assets/col-man.jpg" alt="" loading="lazy"></figure>
+    <figure data-y="-1.1" style="left:19.42%;top:30.84%;width:9.82%;aspect-ratio:0.543"><img src="assets/col-plinth.jpg" alt="" loading="lazy"></figure>
+    <figure data-y="-.9" style="left:63.60%;top:0.21%;width:17.11%;aspect-ratio:0.884"><img src="assets/col-crema.jpg" alt="Crema on a fresh espresso" loading="lazy"></figure>
+    <figure data-y="-.5" style="left:84.71%;top:17.37%;width:12.34%;aspect-ratio:0.669"><img src="assets/col-rock.jpg" alt="" loading="lazy"></figure>
+    <figure data-y="-.6" style="left:56.52%;top:33.05%;width:26.16%;aspect-ratio:0.959"><img src="assets/col-bag.jpg" alt="561 Coffee Ocean Roast on a stone block" loading="lazy"></figure>
+    <figure data-y="-1.2" style="left:84.71%;top:52.00%;width:13.81%;aspect-ratio:0.510"><img src="assets/col-olive.jpg" alt="" loading="lazy"></figure>
+    <figure data-y="-.8" style="left:9.75%;top:61.26%;width:14.59%;aspect-ratio:0.700"><img src="assets/col-stone.jpg" alt="" loading="lazy"></figure>
+    <figure data-y="-1.3" style="left:30.50%;top:66.32%;width:12.55%;aspect-ratio:0.642"><img src="assets/col-grounds.jpg" alt="Fresh coffee grounds" loading="lazy"></figure>
+    <figure data-y="-1" style="left:46.84%;top:74.84%;width:14.66%;aspect-ratio:0.882"><img src="assets/col-iced.jpg" alt="Iced latte swirling in a glass" loading="lazy"></figure>
+    </div>
     <div class="msg" id="msg"><h2 class="huge"><span class="ln"><span>Built for</span></span><span class="ln"><span>early</span></span><span class="ln"><span>mornings</span></span></h2>
       <p class="sub">For the first cup before class, the last one before practice, and every refill in between.</p></div>
   </div>
@@ -277,9 +279,9 @@ function frame(){
     shot.style.transform='translateX(-50%) translateY('+((1-e)*30-p*10)+'vh) scale('+(1+p*.35)+')';
     // collage: frames drift up at different speeds, message fades in the middle
     var cr=col.getBoundingClientRect(),cp=clamp(-cr.top/(cr.height-H),0,1);
-    figs.forEach(function(f){f.style.transform='translateY('+(cp*parseFloat(f.dataset.y)*H*.6)+'px)'});
+    figs.forEach(function(f){f.style.transform='translateY('+((cp-.5)*parseFloat(f.dataset.y)*H*.6)+'px)'});
     var mo=clamp((cp-.3)/.15,0,1)*clamp((1-cp)/.15,0,1);msg.style.opacity=mo;if(mo>.2)msg.classList.add('in');
-    figs[0].style.opacity=1-mo*.75;
+    figs.forEach(function(f){f.style.opacity=1-mo*.7});
     pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.12) translateY('+((q-.5)*-8)+'%)'});
     marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/2;m.style.transform='translateX('+(((y*.35*d)%w)-(d>0?w*.5:w*.2))+'px)'});
   }
