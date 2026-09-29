@@ -341,6 +341,16 @@ requestAnimationFrame(frame);
   var wrap=document.getElementById('hwrap'),tr=document.getElementById('htrack'),bar=document.getElementById('hbar'),dist=0;
   function size(){dist=Math.max(0,tr.scrollWidth-innerWidth);wrap.style.height=(innerHeight+dist*1.6)+'px'}
   size();addEventListener('resize',size);addEventListener('load',size);
+  // trackpad side-swipe moves the row too (turned into page scroll so it stays in sync)
+  var hxT=0,hxY=0;
+  wrap.addEventListener('wheel',function(e){
+    var dx=e.deltaX;if(Math.abs(dx)<=Math.abs(e.deltaY)||!dist)return;
+    var r=wrap.getBoundingClientRect();if(r.top>innerHeight*.6||r.bottom<innerHeight*.4)return;
+    var top=r.top+scrollY,now=performance.now(),cur=now-hxT<200?hxY:(lenis?lenis.targetScroll:scrollY),y=clamp(cur+dx*1.6,top,top+dist*1.6);
+    if((cur<=top&&dx<0)||(cur>=top+dist*1.6&&dx>0))return;
+    e.preventDefault();e.stopPropagation();hxT=now;hxY=y;
+    if(lenis)lenis.scrollTo(y);else scrollTo(0,y);
+  },{passive:false});
   (function t(){var r=wrap.getBoundingClientRect(),q=dist?clamp(-r.top/(dist*1.6),0,1):0;tr.style.transform='translateX('+(-q*dist).toFixed(1)+'px)';bar.style.transform='scaleX('+q.toFixed(4)+')';requestAnimationFrame(t)})();
 })();
 
