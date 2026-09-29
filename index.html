@@ -13,6 +13,7 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--black:#2b1e16}}
 :root[data-theme="dark"]{--black:#2b1e16}
 *{box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--black);color:var(--cream);font:500 14px/1.45 Archivo,system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -250,9 +251,12 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <div class="fb"><a href="#spots">Contact</a><a href="#shop">Shipping</a><a href="#top">Privacy</a><span>© 2026 561 Coffee</span></div>
 </footer>
 
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (function(){
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+// smooth, weighted scrolling (skipped if the library fails to load or motion is reduced)
+var lenis=null;try{if(!reduce&&window.Lenis){lenis=new Lenis({lerp:.09,smoothWheel:true});document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t)}})})}}catch(e){lenis=null}
 function clamp(v,a,b){return v<a?a:v>b?b:v}
 // reveal on enter
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.25});
@@ -260,10 +264,11 @@ document.querySelectorAll('.io,.rv').forEach(function(el){io.observe(el)});
 // nav colour follows the section underneath
 var nav=document.getElementById('nav'),secs=[].slice.call(document.querySelectorAll('[data-nav]'));
 var big=document.getElementById('bigLogo'),shot=document.getElementById('introShot'),intro=document.getElementById('top');
-var col=document.getElementById('collage'),figs=[].slice.call(col.querySelectorAll('figure'));
+var col=document.getElementById('collage'),figs=[].slice.call(col.querySelectorAll('figure')),cx=0;
 var pxs=[].slice.call(document.querySelectorAll('.px')),marqs=[].slice.call(document.querySelectorAll('.marq div'));
 var H=innerHeight;addEventListener('resize',function(){H=innerHeight});
-function frame(){
+function frame(t){
+  if(lenis)lenis.raf(t);
   var y=scrollY;
   var mode='light';for(var i=0;i<secs.length;i++){var r=secs[i].getBoundingClientRect();if(r.top<=23&&r.bottom>23){mode=secs[i].dataset.nav;break}}
   nav.className=mode==='dark'?'dark':mode==='light'?'light':'';
@@ -272,10 +277,10 @@ function frame(){
     var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),e=clamp((H-ir.top)/H,0,1);
     big.style.transform='translate(-50%,'+((1-e)*-60+p*14)+'vh)';
     shot.style.transform='translateX(-50%) translateY('+((1-e)*30-p*10)+'vh) scale('+(1+p*.35)+')';
-    // collage: outer photos slide outward while the block scrolls in, then it all moves up together
-    var cr=col.getBoundingClientRect(),ce=clamp((H-cr.top)/(H*.85),0,1);ce=1-Math.pow(1-ce,3);
-    var sp=Math.min(innerWidth*.01,innerHeight*.016)*(innerWidth<760?5:14);
-    figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(-f.dataset.d*(1-ce)*sp)+'px))'});
+    // collage: outer photos drift outward slowly and steadily the whole time the block is on screen (eased)
+    var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
+    cx+=((cq-.35)*sp-cx)*.09;
+    figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(+f.dataset.d*cx).toFixed(2)+'px))'});
     pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.12) translateY('+((q-.5)*-8)+'%)'});
     marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/2;m.style.transform='translateX('+(((y*.35*d)%w)-(d>0?w*.5:w*.2))+'px)'});
   }
