@@ -121,6 +121,12 @@ nav.clear{background:transparent;color:var(--cream)}
 .menu .kicker{color:#d2b48c}
 .marq{white-space:nowrap;font:italic 400 clamp(40px,5.4vw,84px)/1.12 'Instrument Serif',Georgia,serif;margin-top:clamp(30px,5vh,50px)}
 .marq div{display:inline-block;will-change:transform}
+.marq b{font-weight:inherit;cursor:default;transition:opacity .3s}
+.marq:hover b{opacity:.45}.marq b:hover{opacity:1}
+.peek{position:fixed;left:0;top:0;width:clamp(120px,11vw,170px);aspect-ratio:1;z-index:40;pointer-events:none;overflow:hidden;opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .25s,transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.peek.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.peek img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media (hover:none){.peek{display:none}}
 .list{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,5vw,80px);max-width:980px;margin:clamp(50px,8vh,80px) auto 0;padding:0 20px;text-align:left}
 .list .it{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .list b{font:800 12px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.01em}
@@ -248,6 +254,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
     <div class="it"><div><b>561 Tonic</b><span>Espresso, tonic, orange peel</span></div><em>$5.75</em></div>
   </div>
   <p class="note">Oat and almond milk at no extra charge.</p>
+  <div class="peek" id="peek" aria-hidden="true"><img alt=""></div>
 </section>
 
 <section class="close io" data-nav="dark">
@@ -299,11 +306,27 @@ function frame(t){
     cx+=((cq-.35)*sp-cx)*.09;
     figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(+f.dataset.d*cx).toFixed(2)+'px))'});
     pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.12) translateY('+((q-.5)*-8)+'%)'});
-    marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/2;m.style.transform='translateX('+(((y*.35*d)%w)-(d>0?w*.5:w*.2))+'px)'});
+    marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/4;var o=(y*.5)%w;m.style.transform='translateX('+(d>0?o-w:-o)+'px)'});
   }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+// menu: hover a drink in the sliding lines to see it
+(function(){
+  var pics={'Espresso':'d-espresso','Cortado':'d-cortado','Flat White':'d-flatwhite','Latte':'d-latte','Oat Latte':'d-latte','Pour Over':'d-batch','Batch Brew':'d-batch','Cold Brew':'d-coldbrew','561 Tonic':'d-coldbrew','Iced Cortado':'d-iced','Signature Blend':'s-signature','Ocean Roast':'s-ocean','Colombian Reserve':'s-colombian','Espresso Roast':'s-espresso','Decaf Blend':'s-decaf'};
+  document.querySelectorAll('.marq div').forEach(function(d){
+    var seen={},h=d.textContent.split(',').map(function(t){var n=t.replace(/\u00a0/g,' ').trim();if(!n||seen[n])return '';seen[n]=1;return '<b data-p="'+(pics[n]||'')+'">'+n+'</b>,&nbsp; '}).join('');
+    d.innerHTML=h+h+h+h;
+  });
+  var pk=document.getElementById('peek');document.body.appendChild(pk);var im=pk.querySelector('img'),mx=0,my=0,px=0,py=0,on=false;
+  Object.keys(pics).forEach(function(k){new Image().src='assets/'+pics[k]+'.jpg'});
+  document.querySelectorAll('.marq b').forEach(function(b){
+    b.addEventListener('mouseenter',function(){if(!b.dataset.p)return;im.src='assets/'+b.dataset.p+'.jpg';pk.classList.add('on');on=true});
+    b.addEventListener('mouseleave',function(){pk.classList.remove('on');on=false});
+  });
+  addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+  (function loop(){px+=(mx-px)*.18;py+=(my-py)*.18;pk.style.left=px+'px';pk.style.top=py+'px';requestAnimationFrame(loop)})();
+})();
 document.getElementById('news').addEventListener('submit',function(e){e.preventDefault();var i=this.querySelector('input');i.value='';i.placeholder='Thanks. Sign-ups open soon.'});
 })();
 </script>
