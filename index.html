@@ -183,16 +183,15 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 }
 @media (prefers-reduced-motion: reduce){.huge .ln>span,.sub,.btn,.rv{transition:none;transform:none;opacity:1}}
 
-/* splash v10: cream screen, dark green 561 rises in, a maroon circle draws around it, the circle opens into the
-   hero while the 561 flies up and becomes the nav logo. Built by JS below. */
+/* splash v11: on cream, the dark green 561 is written out like a pen line and inked in, a maroon circle is drawn
+   around it, then the whole sheet lifts off the top of the screen into the hero. Built by JS below. */
 #splash{position:fixed;inset:0;z-index:200;pointer-events:none;overflow:hidden;animation:spFail 0s 5s forwards}
-#splash .sp-cover{position:absolute;inset:0}
+#splash .sp-cover{position:absolute;inset:0;will-change:transform;box-shadow:0 30px 60px rgba(20,12,8,.35)}
 #splash .sp-bg{position:absolute;inset:0;background:var(--paper)}
-#splash .sp-ring{position:absolute;left:0;top:0}
-#splash .sp-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(40vw,56vh);line-height:1;letter-spacing:-.02em;color:#1f3a2c}
-#splash .sp-word span{display:block;line-height:.86;padding:.05em 0 .09em;clip-path:inset(100% 0 0 0);will-change:clip-path,transform}
+#splash .sp-pen{position:absolute;left:0;top:0;overflow:visible}
+#splash .sp-pen text{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:0;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+#splash .sp-pen .w{will-change:transform}
 @keyframes spFail{to{visibility:hidden}}
-@media (max-width:760px){#splash .sp-word{font-size:min(50vw,46vh)}}
 </style>
 </head>
 <body>
@@ -306,50 +305,45 @@ var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 // smooth, weighted scrolling (skipped if the library fails to load or motion is reduced)
 var lenis=null;try{if(!reduce&&window.Lenis){lenis=new Lenis({lerp:.09,smoothWheel:true});document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t)}})})}}catch(e){lenis=null}
 function clamp(v,a,b){return v<a?a:v>b?b:v}
-// splash v10 (plays on every load; a real scroll, key or tap after the first moment skips it; reduced motion gets a short fade)
+// splash v11 (plays on every load; a real scroll, key or tap after the first moment skips it; reduced motion gets a short fade)
 (function(){
-  var sp=document.getElementById('splash'),hero=document.getElementById('top'),D=document.documentElement,navEl=document.getElementById('nav');
+  var sp=document.getElementById('splash'),hero=document.getElementById('top'),D=document.documentElement;
   var done=function(){hero.classList.add('in')};
   if(!sp){done();return}
   sp.style.animation='none';
   var W=innerWidth,H=innerHeight,mob=W<760,cover=sp.querySelector('.sp-cover');
-  var R=Math.min(W,H)*(mob?.4:.36),SW=mob?5:7;
-  sp.insertAdjacentHTML('beforeend','<svg class="sp-ring" width="'+W+'" height="'+H+'"><g transform="translate('+W/2+' '+H/2+')"><circle class="c" r="'+R+'" fill="none" stroke="#5e1d22" stroke-width="'+SW+'" transform="rotate(-90)"/></g></svg>');
-  var circ=sp.querySelector('.c'),C=2*Math.PI*R;circ.setAttribute('stroke-dasharray',C);circ.setAttribute('stroke-dashoffset',C);
-  var wd=document.createElement('div');wd.className='sp-word';wd.innerHTML='<span class="logo">561</span>';sp.appendChild(wd);
-  var ws=wd.querySelector('span'),navLogo=navEl&&navEl.querySelector('.logo');if(navLogo)navLogo.style.transition='none';
-  var T0=0,fin=false,revealed=false,fly={dx:0,dy:0,s:1};
-  function trect(e){var rg=document.createRange();rg.selectNodeContents(e);return rg.getBoundingClientRect()}
-  function measure(){var a=trect(ws),r=ws.getBoundingClientRect(),ox=a.left+a.width/2,oy=a.top+a.height/2;
-    ws.style.transformOrigin=(ox-r.left).toFixed(1)+'px '+(oy-r.top).toFixed(1)+'px';
-    if(navLogo){var b=trect(navLogo);fly.dx=b.left+b.width/2-ox;fly.dy=b.top+b.height/2-oy;fly.s=parseFloat(getComputedStyle(navLogo).fontSize)/parseFloat(getComputedStyle(wd).fontSize)}}
+  var fs=Math.min(W*(mob?.5:.4),H*(mob?.46:.56)),R=Math.min(W,H)*(mob?.4:.36),SW=mob?3:4;
+  var NS='http://www.w3.org/2000/svg';
+  cover.insertAdjacentHTML('beforeend','<svg class="sp-pen" width="'+W+'" height="'+H+'"><circle class="c" cx="'+W/2+'" cy="'+H/2+'" r="'+R+'" fill="none" stroke="#5e1d22" stroke-width="'+SW+'" stroke-linecap="round" transform="rotate(-90 '+W/2+' '+H/2+')"/><g class="w"></g></svg>');
+  var svg=cover.querySelector('.sp-pen'),g=svg.querySelector('.w'),circ=svg.querySelector('.c'),C=2*Math.PI*R;
+  circ.setAttribute('stroke-dasharray',C);circ.setAttribute('stroke-dashoffset',C);
+  // one text per digit so each can be written in turn
+  var digs=['5','6','1'].map(function(d){var t=document.createElementNS(NS,'text');t.textContent=d;t.setAttribute('class','logo');
+    t.setAttribute('font-size',fs);t.setAttribute('fill','#1f3a2c');t.setAttribute('fill-opacity','0');t.setAttribute('stroke','#1f3a2c');
+    t.setAttribute('stroke-width',mob?1.6:2.4);t.setAttribute('stroke-linejoin','round');t.setAttribute('stroke-dasharray','1400');t.setAttribute('stroke-dashoffset','1400');g.appendChild(t);return t});
+  function lay(){var ws=digs.map(function(t){return t.getComputedTextLength()}),gap=-.02*fs,tot=ws[0]+ws[1]+ws[2]+gap*2,x=W/2-tot/2,base=H/2+fs*.33;
+    digs.forEach(function(t,i){t.setAttribute('x',x.toFixed(1));t.setAttribute('y',base.toFixed(1));x+=ws[i]+gap})}
+  var T0=0,fin=false,revealed=false;
   function unlock(){D.style.overflow='';if(lenis)lenis.start();['wheel','touchstart','keydown','pointerdown'].forEach(function(e){removeEventListener(e,skip)})}
-  function end(){if(fin)return;fin=true;hero.style.transform='';if(navLogo){navLogo.style.opacity='';setTimeout(function(){navLogo.style.transition=''},50)}unlock();if(!revealed){revealed=true;done()}sp.remove()}
-  function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();hero.style.transform='';if(navLogo)navLogo.style.opacity='';if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
+  function end(){if(fin)return;fin=true;hero.style.transform='';unlock();if(!revealed){revealed=true;done()}sp.remove()}
+  function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();hero.style.transform='';if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
   D.style.overflow='hidden';if(lenis)lenis.stop();
   ['wheel','touchstart','keydown','pointerdown'].forEach(function(e){addEventListener(e,skip,{passive:true})});
-  if(reduce){ws.style.clipPath='none';circ.setAttribute('stroke-dashoffset',0);
-    setTimeout(function(){revealed=true;done();sp.style.transition='opacity .4s';sp.style.opacity='0';setTimeout(end,420)},650);return}
-  function oc(x){return 1-Math.pow(1-x,3)}function io(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
+  function oc(x){return 1-Math.pow(1-x,3)}function io(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}function iq(x){return x*x*x*x}
   function k(t,a,b){return Math.min(1,Math.max(0,(t-a)/(b-a)))}
-  function mix(a,b,q){return Math.round(a+(b-a)*q)}
+  if(reduce){lay();digs.forEach(function(t){t.setAttribute('fill-opacity',1);t.setAttribute('stroke-dashoffset',0)});circ.setAttribute('stroke-dashoffset',0);
+    setTimeout(function(){revealed=true;done();sp.style.transition='opacity .4s';sp.style.opacity='0';setTimeout(end,420)},650);return}
   function tick(now){
-    if(fin)return;if(!T0){T0=now;measure()}var t=(now-T0)/1000;
-    // 1 the green 561 rises up through a mask
-    var e=oc(k(t,.1,.55));ws.style.clipPath='inset('+((1-e)*100).toFixed(2)+'% 0 0 0)';
-    // 2 the maroon circle draws itself around it
-    circ.setAttribute('stroke-dashoffset',(C*(1-io(k(t,.35,.85)))).toFixed(1));
-    // 3 the circle opens into a hole and the hero comes through, settling from 1.04 to 1
-    var op=io(k(t,1.0,1.6)),rr=R+op*(Math.hypot(W,H)*.55-R),mk=t>1.0?'radial-gradient(circle at 50% 50%, transparent '+rr.toFixed(1)+'px, #000 '+(rr+1.5).toFixed(1)+'px)':'none';
-    cover.style.webkitMaskImage=mk;cover.style.maskImage=mk;circ.setAttribute('r',(rr+SW/2).toFixed(1));circ.setAttribute('stroke-dasharray',t>1.0?'none':C);circ.style.opacity=(1-k(t,1.35,1.6)).toFixed(3);
-    hero.style.transform=t<1.0?'scale(1.04)':'scale('+(1.04-.04*op).toFixed(4)+')';
-    // 4 the 561 flies up into the nav and turns cream to become the logo
-    var fl=io(k(t,1.0,1.65));
-    ws.style.transform='translate('+(fly.dx*fl).toFixed(1)+'px,'+(fly.dy*fl).toFixed(1)+'px) scale('+(1+(fly.s-1)*fl).toFixed(4)+')';
-    var cq=io(k(t,1.0,1.3));ws.style.color='rgb('+mix(31,241,cq)+','+mix(58,231,cq)+','+mix(44,216,cq)+')';
-    if(navLogo)navLogo.style.opacity=t<1.65?0:'';
-    if(t>1.2&&!revealed){revealed=true;done();unlock()}
-    if(t<1.68)requestAnimationFrame(tick);else end();
+    if(fin)return;if(!T0){T0=now;lay()}var t=(now-T0)/1000;
+    // 1 each digit is written out as a pen line, one after another, then the ink fills in
+    digs.forEach(function(d,i){var a=.08+i*.2,q=io(k(t,a,a+.5));d.setAttribute('stroke-dashoffset',(1400*(1-q)).toFixed(1));d.setAttribute('fill-opacity',oc(k(t,a+.44,a+.66)).toFixed(3))});
+    // 2 the maroon circle is drawn around it in one stroke
+    circ.setAttribute('stroke-dashoffset',(C*(1-io(k(t,.72,1.18)))).toFixed(1));
+    // 3 the whole sheet lifts off the top of the screen, the 561 a touch faster, and the hero settles in underneath
+    var up=iq(k(t,1.32,1.88));cover.style.transform='translate3d(0,'+(-up*105).toFixed(2)+'%,0)';g.style.transform='translateY('+(-up*H*.18).toFixed(1)+'px)';
+    hero.style.transform=t<1.32?'scale(1.04)':'scale('+(1.04-.04*oc(k(t,1.32,2.0))).toFixed(4)+')';
+    if(t>1.6&&!revealed){revealed=true;done();unlock()}
+    if(t<1.9)requestAnimationFrame(tick);else end();
   }
   var started=false,start=function(){if(!started){started=true;requestAnimationFrame(tick)}};
   (document.fonts?document.fonts.load('600 100px "Cormorant Garamond"').catch(function(){}):Promise.resolve()).then(start);setTimeout(start,900);
