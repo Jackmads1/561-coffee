@@ -77,6 +77,7 @@ nav a:hover{opacity:.55}
 /* image pair */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,32px);width:min(78vw,1040px);margin:0 auto;background:var(--black)}
 .pair figure{margin:0;aspect-ratio:.85;overflow:hidden}
+.pair svg{display:block;width:100%;height:100%;will-change:transform;transform:scale(1.12)}
 .pair img,.pair video{display:block;width:100%;height:100%;object-fit:cover;will-change:transform;transform:scale(1.12)}
 .spacer{height:clamp(60px,10vh,120px);background:var(--black)}
 
@@ -224,7 +225,37 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <a class="btn" href="about.html">Our story</a>
 </section>
 
-<div class="pair" data-nav="dark"><figure><img class="px" data-s=".12" src="assets/pair-tamper.jpg" alt="A walnut espresso tamper on a sunlit stone counter with loose grounds"></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
+<div class="pair" data-nav="dark"><figure class="cup" id="cup"><svg class="px" data-s=".12" viewBox="0 0 1194 1400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A clear glass on a sunlit stone counter that fills with coffee as you scroll">
+<defs>
+<clipPath id="cupOut"><path d="M372,430 L412,1052 Q416,1086 450,1088 L732,1088 Q766,1086 770,1052 L808,430 Z"/></clipPath>
+<clipPath id="cupIn"><path d="M392,438 L428,1000 Q431,1022 452,1022 L730,1022 Q751,1022 754,1000 L788,438 Z"/></clipPath>
+<linearGradient id="cupCof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e3820"/><stop offset=".25" stop-color="#3b2214"/><stop offset="1" stop-color="#1c0f08"/></linearGradient>
+<linearGradient id="cupSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient>
+<radialGradient id="cupCrema" cx=".42" cy=".4" r=".7"><stop offset="0" stop-color="#d4a06c"/><stop offset=".6" stop-color="#b17a47"/><stop offset="1" stop-color="#7a4a26"/></radialGradient>
+<linearGradient id="cupStream" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a170c"/><stop offset=".45" stop-color="#6a4126"/><stop offset=".6" stop-color="#8a5a36"/><stop offset="1" stop-color="#241309"/></linearGradient>
+<linearGradient id="cupHl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="cupShadow"><stop offset="0" stop-color="#2b1a0e" stop-opacity=".55"/><stop offset="1" stop-color="#2b1a0e" stop-opacity="0"/></radialGradient>
+<filter id="cupBlur" x="0" y="0" width="100%" height="100%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<image href="assets/cup-bg.jpg" width="1194" height="1400"/>
+<ellipse cx="660" cy="1094" rx="330" ry="38" fill="url(#cupShadow)"/>
+<ellipse cx="590" cy="1088" rx="220" ry="22" fill="url(#cupShadow)"/>
+<g clip-path="url(#cupOut)"><image href="assets/cup-bg.jpg" width="1194" height="1400" filter="url(#cupBlur)" transform="translate(590 760) scale(1.06 1) translate(-590 -760)"/><rect width="1194" height="1400" fill="#fff6e8" opacity=".1"/></g>
+<g clip-path="url(#cupIn)">
+<rect class="lq" x="360" y="1022" width="470" height="120" fill="url(#cupCof)"/>
+<rect class="lq" x="360" y="1022" width="470" height="120" fill="url(#cupSide)"/>
+<ellipse class="cr" cx="590" cy="1022" rx="150" ry="10" fill="url(#cupCrema)"/>
+<ellipse class="rp" cx="600" cy="1022" rx="10" ry="2" fill="none" stroke="#e6c197" stroke-opacity="0" stroke-width="3"/>
+</g>
+<path class="st" d="" fill="url(#cupStream)" opacity="0"/>
+<path d="M372,430 L412,1052 Q416,1086 450,1088 L732,1088 Q766,1086 770,1052 L808,430" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+<path d="M428,1000 Q431,1022 452,1022 L730,1022 Q751,1022 754,1000" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.5"/>
+<path d="M414,1062 Q420,1086 450,1088 L732,1088 Q762,1086 768,1062" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"/>
+<polygon points="410,470 440,470 468,1000 446,1000" fill="url(#cupHl)" opacity=".55"/>
+<polygon points="738,470 752,470 728,990 718,990" fill="url(#cupHl)" opacity=".35"/>
+<ellipse cx="590" cy="434" rx="218" ry="24" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/>
+<ellipse cx="590" cy="438" rx="198" ry="19" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2"/>
+</svg></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
 <div class="spacer" data-nav="dark"></div>
 </div>
 
@@ -417,6 +448,36 @@ requestAnimationFrame(frame);
     if(lenis)lenis.scrollTo(y);else scrollTo(0,y);
   },{passive:false});
   (function t(){var r=wrap.getBoundingClientRect(),q=dist?clamp(-r.top/(dist*1.6),0,1):0;tr.style.transform='translateX('+(-q*dist).toFixed(1)+'px)';bar.style.transform='scaleX('+q.toFixed(4)+')';requestAnimationFrame(t)})();
+})();
+
+// pair: the clear glass fills with coffee as you scroll past it, with a pour stream while it is filling
+(function(){
+  var fig=document.getElementById('cup');if(!fig)return;
+  var svg=fig.querySelector('svg'),lq=[].slice.call(svg.querySelectorAll('.lq')),cr=svg.querySelector('.cr'),rp=svg.querySelector('.rp'),st=svg.querySelector('.st');
+  var BOT=1022,TOP=540,lv=0,prev=0,flow=0,on=false;
+  // inner wall: x 392..788 at y 438, x 428..754 at y 1000
+  function hw(y){var k=(y-438)/562;return ((788-392)+((754-428)-(788-392))*k)/2}
+  new IntersectionObserver(function(es){on=es[0].isIntersecting}).observe(fig);
+  function loop(t){
+    if(on){
+      var r=fig.getBoundingClientRect(),H=innerHeight,q=Math.min(1,Math.max(0,(H-r.top)/(H+r.height)));
+      var target=reduce?1:Math.min(1,Math.max(0,(q-.26)/.46));target=target<.5?2*target*target:1-Math.pow(-2*target+2,2)/2;
+      lv+=(target-lv)*.08;var dv=lv-prev;prev=lv;flow+=((dv>.0004?1:0)-flow)*.12;
+      var y=BOT-(BOT-TOP)*lv,w=hw(Math.min(y,1000)),s=t/1000;
+      lq.forEach(function(e){e.setAttribute('y',y.toFixed(1));e.setAttribute('height',(BOT-y+4).toFixed(1))});
+      var wob=Math.sin(s*3.1)*1.5*flow;
+      cr.setAttribute('cx',(590+wob).toFixed(1));cr.setAttribute('cy',y.toFixed(1));cr.setAttribute('rx',Math.max(0,w-(y>995?30:2)).toFixed(1));cr.setAttribute('ry',(w*.075+Math.sin(s*4)*1.2*flow).toFixed(1));
+      cr.style.opacity=lv>.02?1:0;lq.forEach(function(e){e.style.opacity=lv>.02?1:0});
+      // stream from above the frame down to the surface
+      var sx=600+Math.sin(s*5.3)*2*flow,sw=9;
+      st.setAttribute('d','M'+(sx-sw)+',-40 C'+(sx-sw)+','+(y*.5)+' '+(sx-sw*.7)+','+(y*.8)+' '+(sx-sw*.8)+','+y+' L'+(sx+sw*.8)+','+y+' C'+(sx+sw*.7)+','+(y*.8)+' '+(sx+sw)+','+(y*.5)+' '+(sx+sw)+',-40 Z');
+      st.setAttribute('opacity',flow<.2?0:Math.min(1,flow*1.4).toFixed(3));
+      // ripple where the stream lands
+      var ph=(s*1.6)%1;rp.setAttribute('cy',y.toFixed(1));rp.setAttribute('cx',sx.toFixed(1));rp.setAttribute('rx',(12+ph*Math.max(20,w*.7)).toFixed(1));rp.setAttribute('ry',(3+ph*w*.05).toFixed(1));rp.setAttribute('stroke-opacity',((1-ph)*.55*flow).toFixed(3));
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 })();
 
 // hero dot field: tiny faint dots that get pushed aside by the cursor and spring back
