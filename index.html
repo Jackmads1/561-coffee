@@ -83,12 +83,13 @@ nav a:hover{opacity:.55}
 
 /* shop */
 .white{background:var(--paper);color:var(--ink)}
-.shop{padding:clamp(80px,12vh,140px) clamp(14px,2.5vw,36px) clamp(70px,10vh,120px);text-align:center}
+.shop{padding:clamp(20px,4vh,50px) clamp(14px,2.5vw,36px) clamp(70px,10vh,120px);text-align:center}
 .shop .kicker{color:#8a7662}
-.hwrap{position:relative;margin:clamp(30px,5vh,60px) calc(-1*clamp(14px,2.5vw,36px)) 0}
+.shead{text-align:center;padding:0 16px clamp(18px,3.5vh,40px)}.shead .kicker{font-size:clamp(20px,2.4vw,40px);margin:0 0 .35em}.shead .huge{font-size:clamp(40px,min(6.4vw,9vh),108px)}
+.hwrap{position:relative;margin:0 calc(-1*clamp(14px,2.5vw,36px)) 0}
 .hpin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(50px,5vw,80px);box-sizing:border-box}
 .grid{display:flex;gap:clamp(10px,1.4vw,20px);padding:0 clamp(14px,2.5vw,36px);width:max-content;text-align:left;will-change:transform}
-.grid .prod{flex:none;width:calc(min(64vh,62svh) * .66)}
+.grid .prod{flex:none;width:calc(min(50vh,48svh) * .66)}
 .hbar{margin:clamp(14px,3vh,28px) clamp(14px,2.5vw,36px) 0;height:1px;background:#ddcfbc;position:relative}.hbar i{position:absolute;left:0;top:0;height:100%;width:100%;background:var(--ink);transform-origin:0 50%;transform:scaleX(0)}
 .prod{cursor:pointer}
 .prod .ph .alt{position:absolute;inset:0;opacity:0;transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.75,.15,1)}
@@ -230,9 +231,8 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 </div>
 
 <section class="white shop io" id="shop" data-nav="light">
-  <p class="kicker serif">Five coffees, one roaster</p>
-  <h2 class="huge"><span class="ln"><span>Roasted</span></span><span class="ln"><span>this week</span></span></h2>
-  <div class="hwrap" id="hwrap"><div class="hpin"><div class="grid" id="htrack">
+  <div class="hwrap" id="hwrap"><div class="hpin"><div class="shead io"><p class="kicker serif">Five coffees, one roaster,</p>
+  <h2 class="huge"><span class="ln"><span>Carefully</span></span><span class="ln"><span>selected</span></span></h2></div><div class="grid" id="htrack">
     <article class="prod rv"><div class="ph"><img src="assets/s-signature.jpg" alt="561 Coffee Signature Blend" loading="lazy"><img class="alt" src="assets/s-signature-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Signature Blend</h3><p>Chocolate, caramel, balanced</p></div><div class="pr">from <u>$18</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-ocean.jpg" alt="561 Coffee Ocean Roast" loading="lazy"><img class="alt" src="assets/s-ocean-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Ocean Roast</h3><p>Citrus, nutty, smooth</p></div><div class="pr">from <u>$19</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/s-colombian.jpg" alt="561 Coffee Colombian Reserve" loading="lazy"><img class="alt" src="assets/s-colombian-b.jpg" alt="" loading="lazy"></div><div class="meta"><div><h3>Colombian Reserve</h3><p>Fruity, bright, clean</p></div><div class="pr">from <u>$21</u></div></div></article>
