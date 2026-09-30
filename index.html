@@ -457,7 +457,7 @@ requestAnimationFrame(frame);
 
 // menu: hover a drink in the sliding lines to see it
 (function(){
-  var pics={'Espresso':'d-espresso','Americano':'d-espresso','Cortado':'d-cortado','Cappuccino':'d-flatwhite','Flat White':'d-flatwhite','Latte':'d-latte','Oat Latte':'d-latte','Pour Over':'d-batch','Batch Brew':'d-batch','Cold Brew':'d-coldbrew','561 Tonic':'d-coldbrew','Iced Cortado':'d-iced','Signature Blend':'s-signature','Ocean Roast':'s-ocean','Colombian Reserve':'s-colombian','Espresso Roast':'s-espresso','Decaf Blend':'s-decaf'};
+  var pics={'Espresso':'d-espresso','Americano':'d-americano','Cortado':'d-cortado','Cappuccino':'d-flatwhite','Flat White':'d-flatwhite','Latte':'d-latte','Oat Latte':'d-latte','Pour Over':'d-batch','Batch Brew':'d-batch','Cold Brew':'d-coldbrew','561 Tonic':'d-coldbrew','Iced Cortado':'d-iced','Signature Blend':'s-signature','Ocean Roast':'s-ocean','Colombian Reserve':'s-colombian','Espresso Roast':'s-espresso','Decaf Blend':'s-decaf'};
   document.querySelectorAll('.marq div').forEach(function(d){
     var seen={},h=d.textContent.split(',').map(function(t){var n=t.replace(/\u00a0/g,' ').trim();if(!n||seen[n])return '';seen[n]=1;return '<b data-p="'+(pics[n]||'')+'">'+n+'</b>,&nbsp; '}).join('');
     d.innerHTML=h+h+h+h;
