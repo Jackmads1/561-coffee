@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Cormorant+Garamond:wght@500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<script>try{if(sessionStorage.getItem("561-splash"))document.documentElement.classList.add("sp-seen")}catch(e){}</script>
 <style>
 :root{--ink:#2b1e16;--paper:#f3ebdf;--black:#2b1e16;--sand:#cdb393;--cream:#f1e7d8;--caramel:#b07a4a;--line:rgba(241,231,216,.2);--grey:#9a8876;color-scheme:light}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--black:#2b1e16}}
@@ -189,7 +188,6 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 #splash .sp-shot{position:absolute;left:0;right:0;height:1px;background:var(--cream);transform-origin:0 50%;transform:scaleX(0);z-index:3}
 #splash .sp-noise{position:absolute;inset:-50%;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:spNoise .5s steps(4) infinite}
 @keyframes spNoise{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-5%)}75%{transform:translate(-2%,-2%)}}
-html.sp-seen #splash{display:none}
 @keyframes spFail{to{visibility:hidden}}
 @media (max-width:760px){#splash .sp-word{font-size:min(58vw,52vh)}#splash .sp-lab{font-size:8px}}
 </style>
@@ -297,12 +295,11 @@ var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 // smooth, weighted scrolling (skipped if the library fails to load or motion is reduced)
 var lenis=null;try{if(!reduce&&window.Lenis){lenis=new Lenis({lerp:.09,smoothWheel:true});document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t)}})})}}catch(e){lenis=null}
 function clamp(v,a,b){return v<a?a:v>b?b:v}
-// splash v7 (once per session; any scroll, key or tap skips it; reduced motion gets a short fade)
+// splash v7 (plays on every load; a real scroll, key or tap after the first moment skips it; reduced motion gets a short fade)
 (function(){
   var sp=document.getElementById('splash'),hero=document.getElementById('top'),D=document.documentElement,navEl=document.getElementById('nav');
   var done=function(){hero.classList.add('in')};
   if(!sp||D.classList.contains('sp-seen')){if(sp)sp.remove();done();return}
-  try{sessionStorage.setItem('561-splash','1')}catch(e){}
   sp.style.animation='none';
   var W=innerWidth,H=innerHeight,mob=W<760;
   function el(c,parent,html){var e=document.createElement('div');e.className=c;if(html!=null)e.innerHTML=html;(parent||sp).appendChild(e);return e}
@@ -332,7 +329,7 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
   var T0=0,fin=false,revealed=false;
   function unlock(){D.style.overflow='';if(lenis)lenis.start();['wheel','touchstart','keydown','pointerdown'].forEach(function(e){removeEventListener(e,skip)})}
   function end(){if(fin)return;fin=true;unlock();if(!revealed){revealed=true;done()}sp.remove()}
-  function skip(){if(fin)return;unlock();if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
+  function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
   D.style.overflow='hidden';if(lenis)lenis.stop();
   ['wheel','touchstart','keydown','pointerdown'].forEach(function(e){addEventListener(e,skip,{passive:true})});
   if(reduce){sp.querySelector('.sp-noise').remove();strips.forEach(function(s){s.e.style.clipPath='none'});out.remove();
