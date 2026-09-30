@@ -225,7 +225,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <a class="btn" href="about.html">Our story</a>
 </section>
 
-<div class="pair" data-nav="dark"><figure class="cup" id="cup"><canvas class="px" data-s=".12" width="1382" height="1621" role="img" aria-label="Milk pouring into a glass of coffee, filling it into a latte as you scroll"></canvas></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
+<div class="pair" data-nav="dark"><figure><img class="px" data-s=".12" src="assets/latte-glass.jpg" alt="A latte in a clear glass on a pale stone counter" loading="lazy"></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
 <div class="spacer" data-nav="dark"></div>
 </div>
 
@@ -418,86 +418,6 @@ requestAnimationFrame(frame);
     if(lenis)lenis.scrollTo(y);else scrollTo(0,y);
   },{passive:false});
   (function t(){var r=wrap.getBoundingClientRect(),q=dist?clamp(-r.top/(dist*1.6),0,1):0;tr.style.transform='translateX('+(-q*dist).toFixed(1)+'px)';bar.style.transform='scaleX('+q.toFixed(4)+')';requestAnimationFrame(t)})();
-})();
-
-// pair: milk keeps pouring into Jack's glass as you scroll, the level rises and the coffee turns into a latte
-(function(){
-  var fig=document.getElementById('cup');if(!fig)return;
-  var cv=fig.querySelector('canvas'),g=cv.getContext('2d'),W=cv.width,Hc=cv.height,img=new Image(),clean=new Image(),strip=new Image(),ready=false,on=false,n=0;
-  // the milk stream's edges, traced from the photo every 8 px down the frame; the stream itself is redrawn so it can flow
-  var SL=[799.7, 798.6, 797.4, 796.2, 794.9, 793.7, 792.5, 791.3, 790.0, 788.8, 787.5, 786.2, 785.0, 783.7, 782.4, 781.1, 779.8, 778.5, 777.2, 775.9, 774.6, 773.3, 772.0, 770.7, 769.4, 768.0, 766.7, 765.4, 764.1, 762.8, 761.5, 760.1, 758.8, 757.5, 756.2, 754.9, 753.6, 752.3, 751.0, 749.7, 748.4, 747.1, 745.9, 744.6, 743.3, 742.1, 740.8, 739.6, 738.4, 737.1, 735.9, 734.7, 733.5, 732.3, 731.2, 730.0, 728.8, 727.7, 726.6, 725.5, 724.4, 723.3, 722.2, 721.1, 720.1, 719.0, 718.0, 717.0, 716.0, 715.1, 714.1, 713.2, 712.3, 711.4, 710.5, 709.6, 708.8, 707.9, 707.1, 706.4, 705.6, 704.8, 704.1, 703.4, 702.8, 702.1, 701.5, 700.9, 700.3, 699.7, 699.2, 698.7, 698.2, 697.8, 697.3, 696.9, 696.5, 696.2, 695.9, 695.6, 695.3, 695.1, 694.9, 694.7, 694.6, 694.5, 694.4, 694.3, 694.3, 694.3, 694.4, 694.5, 694.6, 694.7, 694.9, 695.1, 695.4, 695.7, 696.0, 696.4, 696.8],SR=[896.3, 893.6, 891.0, 888.5, 885.9, 883.4, 881.0, 878.6, 876.3, 873.9, 871.6, 869.4, 867.2, 865.0, 862.9, 860.8, 858.7, 856.7, 854.7, 852.7, 850.8, 848.9, 847.1, 845.2, 843.4, 841.6, 839.9, 838.2, 836.5, 834.8, 833.2, 831.6, 830.0, 828.5, 826.9, 825.4, 823.9, 822.5, 821.0, 819.6, 818.2, 816.9, 815.5, 814.2, 812.8, 811.5, 810.3, 809.0, 807.8, 806.5, 805.3, 804.1, 802.9, 801.7, 800.6, 799.4, 798.3, 797.2, 796.1, 795.0, 793.9, 792.8, 791.7, 790.6, 789.6, 788.5, 787.5, 786.4, 785.4, 784.3, 783.3, 782.3, 781.3, 780.2, 779.2, 778.2, 777.2, 776.1, 775.1, 774.1, 773.1, 772.1, 771.0, 770.0, 768.9, 767.9, 766.9, 765.8, 764.7, 763.7, 762.6, 761.5, 760.4, 759.3, 758.2, 757.1, 755.9, 754.8, 753.6, 752.4, 751.3, 750.1, 748.8, 747.6, 746.4, 745.1, 743.8, 742.5, 741.2, 739.9, 738.5, 737.1, 735.7, 734.3, 732.9, 731.4, 729.9, 728.4, 726.9, 725.3, 723.7];
-  function edge(a,y){var i=Math.min(a.length-2,Math.max(0,Math.floor(y/8))),f=y/8-i;return a[i]+(a[i+1]-a[i])*f}
-  var lay=document.createElement('canvas');lay.width=W;lay.height=Hc;var lg=lay.getContext('2d');
-  // the glass, measured on the photo: inner walls at y 900 (x 368..1018) taper to y 1320 (x 408..985)
-  function L(y){return 368+(y-900)*40/420}function R(y){return 1018-(y-900)*33/420}
-  var S0=838,S1=1336,TOP=668,lv=0,last=-1;
-  function got(){if(++n===3){ready=true;draw(0,0)}}img.onload=clean.onload=strip.onload=got;img.src='assets/latte.jpg';clean.src='assets/latte-clean.jpg';strip.src='assets/milk-strip.png';
-  function draw(p,t){
-    g.drawImage(clean,0,0);
-    var T0=S0-p*(S0-TOP);
-    lg.clearRect(0,0,W,Hc);
-    // the liquid shape: an elliptical surface (seen from slightly above) and the glass walls down to the bottom
-    var ry=30,cx0=(L(T0+ry)+R(T0+ry))/2,rx=(R(T0+ry)-L(T0+ry))/2-4;
-    function shape(c){c.beginPath();c.ellipse(cx0,T0+ry,rx,ry,0,Math.PI,0);c.lineTo(R(S1)-4,S1);c.lineTo(L(S1)+4,S1);c.closePath()}
-    lg.save();shape(lg);lg.clip();
-    // stretch the coffee upwards row by row, widening it to follow the glass walls
-    for(var yt=T0;yt<S1;yt+=3){
-      var ys=S1-(S1-yt)*(S1-S0)/(S1-T0),hs=3*(S1-S0)/(S1-T0);
-      lg.drawImage(img,L(ys)+2,ys,R(ys)-L(ys)-4,hs+.6,L(yt)-2,yt,R(yt)-L(yt)+4,3.6);
-    }
-    // more milk: the coffee warms up to a latte colour, lightest near the top where the milk lands
-    lg.globalCompositeOperation='source-atop';
-    var gr=lg.createLinearGradient(0,T0,0,S1);
-    gr.addColorStop(0,'rgba(236,214,186,'+(.62*p).toFixed(3)+')');gr.addColorStop(.35,'rgba(214,172,128,'+(.5*p).toFixed(3)+')');gr.addColorStop(1,'rgba(176,122,78,'+(.38*p).toFixed(3)+')');
-    lg.fillStyle=gr;lg.fillRect(0,T0-20,W,S1-T0+40);
-    // microfoam band on top
-    var fx=(L(T0)+R(T0))/2,fw=(R(T0)-L(T0))/2,fh=18+30*p;
-    var fg=lg.createLinearGradient(0,T0-10,0,T0+fh+40);fg.addColorStop(0,'rgba(244,234,220,'+(.6*p).toFixed(3)+')');fg.addColorStop(.55,'rgba(232,212,186,'+(.32*p).toFixed(3)+')');fg.addColorStop(1,'rgba(214,176,136,0)');
-    lg.fillStyle=fg;lg.fillRect(0,T0-20,W,fh+80);
-    // where the stream lands, a soft bloom of milk that swirls a little
-    var bx=724+Math.sin(t*2.1)*6,by=T0+34+fh*.3,br=lg.createRadialGradient(bx,by,4,bx,by,90+60*p);
-    br.addColorStop(0,'rgba(250,246,238,'+(.85*p).toFixed(3)+')');br.addColorStop(1,'rgba(250,246,238,0)');
-    lg.fillStyle=br;lg.fillRect(bx-160,by-160,320,320);
-    lg.globalCompositeOperation='source-over';
-    // the front edge of the surface, where it meets the glass
-    lg.beginPath();lg.ellipse(cx0,T0+ry,rx,ry,0,0,Math.PI);lg.strokeStyle='rgba(110,70,40,'+(.22*p).toFixed(3)+')';lg.lineWidth=3;lg.stroke();
-    lg.restore();
-    g.drawImage(lay,0,0);
-    g.save();shape(g);g.clip();
-    // keep the glass looking like glass: a soft highlight down each wall
-    g.globalCompositeOperation='screen';
-    var h1=g.createLinearGradient(L(T0)+4,0,L(T0)+40,0);h1.addColorStop(0,'rgba(255,255,255,.28)');h1.addColorStop(1,'rgba(255,255,255,0)');
-    g.fillStyle=h1;g.fillRect(L(T0),T0,50,S1-T0);
-    var h2=g.createLinearGradient(R(T0)-40,0,R(T0)-4,0);h2.addColorStop(0,'rgba(255,255,255,0)');h2.addColorStop(1,'rgba(255,255,255,.22)');
-    g.fillStyle=h2;g.fillRect(R(T0)-50,T0,50,S1-T0);
-    g.globalCompositeOperation='source-over';g.restore();
-    // the milk stream, from above the frame down to the surface: the photo's own shading, with ripples running down it
-    var yEnd=T0+ry+8;
-    for(var y=0;y<yEnd;y+=2){
-      var wob=Math.sin(y*.011-t*2.6)*2.2,sw=1+.035*Math.sin(y*.028-t*7.5),a=edge(SL,y),b=edge(SR,y),c=(a+b)/2+wob,hw=(b-a)/2*sw;
-      g.drawImage(strip,0,0,64,1,c-hw,y,hw*2,2.4);
-      var k=Math.sin(y*.042-t*15)+.6*Math.sin(y*.09-t*27);
-      g.fillStyle=k>0?'rgba(255,255,255,'+(.07*k).toFixed(3)+')':'rgba(150,115,80,'+(-.045*k).toFixed(3)+')';
-      g.fillRect(c-hw*.8,y,hw*1.5,2.4);
-    }
-    // a few drops of milk splashing up where it lands
-    var ix=(edge(SL,yEnd)+edge(SR,yEnd))/2,iy=yEnd-4;
-    for(var i=0;i<8;i++){
-      var ph=(t*1.4+i/8)%1,side=(i%2?1:-1)*(.5+(i*37%10)/18),hgt=(26+(i%3)*14)*(1-ph*.2);
-      g.beginPath();g.arc(ix+side*ph*54,iy-Math.sin(Math.PI*ph)*hgt,2.6+(i%3)*1.3,0,7);
-      g.fillStyle='rgba(248,243,234,'+((1-ph)*.9).toFixed(3)+')';g.fill();
-    }
-  }
-  new IntersectionObserver(function(es){on=es[0].isIntersecting}).observe(fig);
-  (function loop(now){
-    if(on&&ready){
-      var r=fig.getBoundingClientRect(),H=innerHeight,q=Math.min(1,Math.max(0,(H-r.top)/(H+r.height)));
-      var tg=reduce?1:Math.min(1,Math.max(0,(q-.24)/.48));tg=tg<.5?2*tg*tg:1-Math.pow(-2*tg+2,2)/2;
-      lv+=(tg-lv)*.08;
-      draw(lv,now/1000);
-    }
-    requestAnimationFrame(loop);
-  })();
 })();
 
 // hero dot field: tiny faint dots that get pushed aside by the cursor and spring back
