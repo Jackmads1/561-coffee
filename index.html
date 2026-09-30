@@ -163,8 +163,8 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 }
 @media (prefers-reduced-motion: reduce){.huge .ln>span,.sub,.btn,.rv{transition:none;transform:none;opacity:1}}
 
-/* splash v7: a layout grid calibrates, 561 builds itself from strips, the machine shows through the numbers,
-   breaks out to full screen and wipes up into the hero. Built by JS below; everything is transform/opacity/clip-path. */
+/* splash v7: a layout grid calibrates, 561 builds itself from strips, locks, then flies up into the nav logo
+   while the screen dissolves into the hero. Built by JS below; everything is transform/opacity/clip-path. */
 #splash{position:fixed;inset:0;z-index:200;pointer-events:none;overflow:hidden;color:var(--cream);animation:spFail 0s 5s forwards}
 #splash .sp-bg{position:absolute;inset:0;background:#170c0b}
 #splash .sp-ln{position:absolute;background:rgba(241,231,216,.16);will-change:transform}
@@ -174,15 +174,11 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 #splash .sp-scan{position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(190,70,76,.9) 30%,rgba(241,231,216,.9) 50%,rgba(190,70,76,.9) 70%,transparent);opacity:0}
 #splash .sp-lab{position:absolute;font:500 9px/1.5 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(241,231,216,.62);white-space:pre;opacity:0}
 #splash .sp-lab b{font-weight:500;color:#c0545b}
-#splash .sp-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(46vw,66vh);line-height:1;letter-spacing:-.03em}
+#splash .sp-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(46vw,66vh);line-height:1;letter-spacing:-.02em}
 #splash .sp-word span{display:block;line-height:.86;padding:.05em 0 .09em}
 #splash .sp-out span{color:transparent;-webkit-text-stroke:1px rgba(241,231,216,.55)}
 #splash .sp-strip span{color:var(--cream)}
-#splash .sp-strip,#splash .sp-band{will-change:transform,clip-path}
-#splash .sp-band,#splash .sp-full{background:#2b1e16 url(assets/col-machine.jpg) 50% 45%/cover no-repeat}
-#splash .sp-band span{color:transparent;-webkit-background-clip:text;background-clip:text}
-#splash .sp-band{-webkit-background-clip:text;background-clip:text;color:transparent}
-#splash .sp-full{position:absolute;inset:0;clip-path:inset(50% 50% 50% 50%)}
+#splash .sp-strip{will-change:transform,clip-path}
 #splash .sp-mk{position:absolute;width:14px;height:14px;border:0 solid rgba(241,231,216,.8);opacity:0}
 #splash .sp-mk.tl{border-width:1px 0 0 1px}#splash .sp-mk.tr{border-width:1px 1px 0 0}#splash .sp-mk.bl{border-width:0 0 1px 1px}#splash .sp-mk.br{border-width:0 1px 1px 0}
 #splash .sp-shot{position:absolute;left:0;right:0;height:1px;background:var(--cream);transform-origin:0 50%;transform:scaleX(0);z-index:3}
@@ -295,7 +291,7 @@ var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 // smooth, weighted scrolling (skipped if the library fails to load or motion is reduced)
 var lenis=null;try{if(!reduce&&window.Lenis){lenis=new Lenis({lerp:.09,smoothWheel:true});document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t)}})})}}catch(e){lenis=null}
 function clamp(v,a,b){return v<a?a:v>b?b:v}
-// splash v7 (plays on every load; a real scroll, key or tap after the first moment skips it; reduced motion gets a short fade)
+// splash v8 (plays on every load; a real scroll, key or tap after the first moment skips it; reduced motion gets a short fade)
 (function(){
   var sp=document.getElementById('splash'),hero=document.getElementById('top'),D=document.documentElement,navEl=document.getElementById('nav');
   var done=function(){hero.classList.add('in')};
@@ -320,15 +316,19 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
   // the word: outline, 14 strips that assemble, image bands, full-bleed image
   var out=word('sp-out');var N=mob?9:14,strips=[];
   for(var i=0;i<N;i++){var w=word('sp-strip');strips.push({e:w,i:i,a:.42+((i*7)%N)/N*.42,oy:((i*37)%11-5)*(mob?7:13),ox:((i*53)%7-3)*2})}
-  var bands=[];for(var b=0;b<5;b++){bands.push({e:word('sp-band'),i:b,a:1.3+b*.07})}
-  var full=el('sp-full');var mks=['tl','tr','bl','br'].map(function(c){return el('sp-mk '+c)});
+var mks=['tl','tr','bl','br'].map(function(c){return el('sp-mk '+c)});
   var meas=el('sp-lab');var shot=el('sp-shot');
-  var box;function measure(){W=innerWidth;H=innerHeight;var r=out.querySelector('span').getBoundingClientRect();box={l:r.left,t:r.top+r.height*.04,r:r.right,b:r.bottom-r.height*.08}}
+  var box,fly={dx:0,dy:0,s:1,ox:0,oy:0};
+  function trect(e){var rg=document.createRange();rg.selectNodeContents(e);return rg.getBoundingClientRect()}
+  function measure(){W=innerWidth;H=innerHeight;var sp0=out.querySelector('span'),r=sp0.getBoundingClientRect();box={l:r.left,t:r.top+r.height*.04,r:r.right,b:r.bottom-r.height*.08};
+    var a=trect(sp0),lg=navEl&&navEl.querySelector('.logo');fly.ox=a.left+a.width/2;fly.oy=a.top+a.height/2;
+    if(lg){var b=trect(lg);fly.dx=b.left+b.width/2-fly.ox;fly.dy=b.top+b.height/2-fly.oy;fly.s=parseFloat(getComputedStyle(lg).fontSize)/parseFloat(getComputedStyle(sp0).fontSize)}}
   function oc(x){return 1-Math.pow(1-x,3)}function ob(x){var c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)}function ic(x){return x*x*x}function io(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
   function k(t,a,b){return Math.min(1,Math.max(0,(t-a)/(b-a)))}
   var T0=0,fin=false,revealed=false;
   function unlock(){D.style.overflow='';if(lenis)lenis.start();['wheel','touchstart','keydown','pointerdown'].forEach(function(e){removeEventListener(e,skip)})}
-  function end(){if(fin)return;fin=true;unlock();if(!revealed){revealed=true;done()}sp.remove()}
+  var navLogo=navEl&&navEl.querySelector('.logo');
+  function end(){if(fin)return;fin=true;if(navLogo)navLogo.style.opacity='';unlock();if(!revealed){revealed=true;done()}sp.remove()}
   function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
   D.style.overflow='hidden';if(lenis)lenis.stop();
   ['wheel','touchstart','keydown','pointerdown'].forEach(function(e){addEventListener(e,skip,{passive:true})});
@@ -338,51 +338,42 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
     if(fin)return;if(!T0){T0=now;measure()}var t=(now-T0)/1000;
     var cx=(box.l+box.r)/2,bw=box.r-box.l,bh=box.b-box.t;
     // 1 grid calibrates, then locks toward the letter edges, then retracts
-    var lock=io(k(t,1.0,1.3)),ret=ic(k(t,1.85,2.15));
+    var lock=io(k(t,1.0,1.3)),ret=ic(k(t,1.4,1.7));
     lines.forEach(function(l,j){var g=oc(k(t,l.d,l.d+.38))*(1-ret);
       var off=0;if(l.v){var px=l.f*W,tgt=Math.abs(px-box.l)<Math.abs(px-box.r)?box.l:box.r;if(Math.abs(px-tgt)<W*.16)off=(tgt-px)*lock}
       else{var py=l.f*H,tg=py<H/2?box.t:box.b;if(Math.abs(py-tg)<H*.22)off=(tg-py)*lock}
       l.e.style.transform=(l.v?'translateX('+off.toFixed(1)+'px) scaleY(':'translateY('+off.toFixed(1)+'px) scaleX(')+g.toFixed(4)+')'});
     var sc=k(t,.05,.75);scan.style.opacity=(sc>0&&sc<1?.9:0);scan.style.transform='translateY('+(io(sc)*H).toFixed(1)+'px)';
     // labels flick on, count, then vanish
-    var lo=k(t,.12,.3)*(1-k(t,1.8,1.95));labs.forEach(function(o,j){var on=t>.12+j*.04&&t<1.85+j*.02;o.e.style.opacity=on?(Math.sin(t*90+j)>.2||t>.4?1:.3)*lo:0});
+    var lo=k(t,.12,.3)*(1-k(t,1.4,1.55));labs.forEach(function(o,j){var on=t>.12+j*.04&&t<1.45+j*.02;o.e.style.opacity=on?(Math.sin(t*90+j)>.2||t>.4?1:.3)*lo:0});
     cal.innerHTML='<b>&#9632;</b> CAL '+String(Math.min(100,Math.floor(k(t,.1,1.1)*100))).padStart(3,'0');
     sys.textContent='SYS '+(k(t,.1,1.3)*5.61).toFixed(3);
     co.textContent=(29.4241+Math.sin(t*9)*.0012*(1-lock)).toFixed(4)+' N  '+(98.4936+Math.cos(t*7)*.0013*(1-lock)).toFixed(4)+' W';
     // 2 outline wipes in, strips assemble with a small overshoot and snap
     var ow=oc(k(t,.3,.62));out.style.clipPath='inset(0 '+((1-ow)*100).toFixed(2)+'% 0 0)';out.style.opacity=(1-k(t,1.05,1.3))*.9;
-    var ex=ic(k(t,1.9,2.25));
+    var fl=io(k(t,1.45,2.1)),tx=fly.dx*fl,ty=fly.dy*fl,fs=1+(fly.s-1)*fl;
+    if(navLogo)navLogo.style.opacity=t<2.1?0:1;
     strips.forEach(function(s){var q=k(t,s.a,s.a+.2),e=ob(q),L=box.l+bw*s.i/N,R=box.l+bw*(s.i+1)/N;
-      var jit=(q>=1&&t<s.a+.27)?s.ox:0,dir=(L+R)/2<cx?-1:1;
-      var fx=dir*ex*(W*.5)*(.4+Math.abs((L+R)/2-cx)/bw),fy=ex*s.oy*3;
+      var jit=(q>=1&&t<s.a+.27)?s.ox:0;
       s.e.style.clipPath='inset(0 '+(W-R+.5).toFixed(1)+'px 0 '+(L-.5).toFixed(1)+'px)';
-      s.e.style.opacity=(q>0?1:0)*(1-k(t,2.0,2.25));
-      s.e.style.transform='translate('+(jit+fx).toFixed(1)+'px,'+((1-e)*s.oy*4+fy).toFixed(1)+'px) scaleX('+(1+ex*.6).toFixed(3)+')'});
+      s.e.style.opacity=q>0?1:0;s.e.style.transformOrigin=fly.ox.toFixed(1)+'px '+fly.oy.toFixed(1)+'px';
+      s.e.style.transform='translate('+(jit+tx).toFixed(1)+'px,'+((1-e)*s.oy*4+ty).toFixed(1)+'px) scale('+fs.toFixed(4)+')'});
     // 3 frame marks travel from the screen corners onto the letters, measurement tag appears
-    var m=io(k(t,.95,1.3)),mo=k(t,.9,1.0)*(1-k(t,1.8,1.95));
+    var m=io(k(t,.95,1.3)),mo=k(t,.9,1.0)*(1-k(t,1.4,1.52));
     var pts=[[box.l-10,box.t-10],[box.r-4,box.t-10],[box.l-10,box.b-4],[box.r-4,box.b-4]],cs=[[24,24],[W-38,24],[24,H-38],[W-38,H-38]];
     mks.forEach(function(e,j){e.style.opacity=mo;e.style.transform='translate('+(cs[j][0]+(pts[j][0]-cs[j][0])*m).toFixed(1)+'px,'+(cs[j][1]+(pts[j][1]-cs[j][1])*m).toFixed(1)+'px)'});
-    meas.style.opacity=k(t,1.2,1.3)*(1-k(t,1.8,1.9));meas.style.left=box.l+'px';meas.style.top=(box.b+14)+'px';
+    meas.style.opacity=k(t,1.2,1.3)*(1-k(t,1.4,1.5));meas.style.left=box.l+'px';meas.style.top=(box.b+14)+'px';
     meas.textContent='W '+Math.round(bw*k(t,1.15,1.35))+'  H '+Math.round(bh*k(t,1.15,1.35))+'  /  LOCKED';
-    // 4 the machine shows through moving bands inside the numbers, bands widen until the letters are full
-    bands.forEach(function(b){var q=io(k(t,b.a,b.a+.5)),h=bh/5,y=box.t+h*b.i+Math.sin(t*6+b.i*1.7)*h*.35*(1-q);
-      var top=y+h*.5*(1-q)-q*h*b.i,bot=y+h*.5+h*.5*q+q*h*(4-b.i);
-      b.e.style.clipPath='inset('+Math.max(0,top).toFixed(1)+'px 0 '+Math.max(0,H-bot).toFixed(1)+'px 0)';
-      b.e.style.opacity=(t>b.a?1:0)*(1-k(t,2.05,2.2));b.e.style.transform='scaleX('+(1+ex*.6).toFixed(3)+')'});
-    // 5 the image breaks out of the letters to the full screen, then wipes up into the hero
-    var br=io(k(t,1.88,2.2)),wp=io(k(t,2.2,2.5));
-    full.style.clipPath='inset('+((box.t*(1-br))+wp*H).toFixed(1)+'px '+((W-box.r)*(1-br)).toFixed(1)+'px '+((H-box.b)*(1-br)).toFixed(1)+'px '+(box.l*(1-br)).toFixed(1)+'px)';
-    full.style.opacity=t>1.86?1:0;
-    if(t>2.2){sp.querySelector('.sp-bg').style.opacity=0;sp.querySelector('.sp-noise').style.opacity=0}
-    if(t>2.18&&!revealed){revealed=true;done();unlock()}
+    // 4 the dark screen dissolves into the hero while the 561 flies up into the nav logo
+    var bgo=1-io(k(t,1.5,2.05));sp.querySelector('.sp-bg').style.opacity=bgo;sp.querySelector('.sp-noise').style.opacity=(.07*bgo).toFixed(3);
+    if(t>1.6&&!revealed){revealed=true;done();unlock()}
     // 6 a cream line shoots across and becomes the nav's bottom rule
     var nb=navEl?navEl.getBoundingClientRect().bottom-1:0;shot.style.top=nb+'px';
-    var sh=oc(k(t,2.28,2.5));shot.style.transform='scaleX('+sh.toFixed(4)+')';shot.style.opacity=t<2.28?0:1-k(t,2.62,2.7);
-    if(t<2.7)requestAnimationFrame(tick);else end();
+    var sh=oc(k(t,1.95,2.2));shot.style.transform='scaleX('+sh.toFixed(4)+')';shot.style.opacity=t<1.95?0:1;
+    if(t<2.25)requestAnimationFrame(tick);else end();
   }
   var started=false,start=function(){if(!started){started=true;requestAnimationFrame(tick)}};
-  var img=new Image();img.src='assets/col-machine.jpg';
-  Promise.all([document.fonts?document.fonts.ready:0,img.decode?img.decode().catch(function(){}):0]).then(start);setTimeout(start,900);
+  (document.fonts?document.fonts.ready:Promise.resolve()).then(start);setTimeout(start,900);
   addEventListener('resize',function(){if(!fin&&T0)measure()});
 })();
 
