@@ -164,10 +164,9 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 @media (prefers-reduced-motion: reduce){.huge .ln>span,.sub,.btn,.rv{transition:none;transform:none;opacity:1}}
 
 /* splash v9: coffee grounds drop onto cream, gather into a maroon 561, a coffee ring marks the cup,
-   the espresso machine opens up behind it and the screen settles into the hero. Built by JS below. */
+   then opens into a hole that grows until the hero fills the screen. Built by JS below. */
 #splash{position:fixed;inset:0;z-index:200;pointer-events:none;overflow:hidden;animation:spFail 0s 5s forwards}
 #splash .sp-bg{position:absolute;inset:0;background:var(--paper)}
-#splash .sp-img{position:absolute;inset:0;background:#2b1e16 url(assets/col-machine.jpg) 50% 45%/cover no-repeat;clip-path:circle(0 at 50% 50%);will-change:clip-path,opacity}
 #splash canvas{position:absolute;inset:0;width:100%;height:100%}
 #splash .sp-ring{position:absolute;left:0;top:0}
 #splash .sp-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(46vw,66vh);line-height:1;letter-spacing:-.02em;color:#5e1d22}
@@ -287,7 +286,6 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
   if(!sp){done();return}
   sp.style.animation='none';
   var W=innerWidth,H=innerHeight,mob=W<760,dpr=Math.min(devicePixelRatio||1,2);
-  var img=document.createElement('div');img.className='sp-img';sp.appendChild(img);
   var cv=document.createElement('canvas');sp.appendChild(cv);var g=cv.getContext('2d');
   var R=Math.min(W,H)*(mob?.44:.4);
   sp.insertAdjacentHTML('beforeend','<svg class="sp-ring" width="'+W+'" height="'+H+'"><g transform="translate('+W/2+' '+H/2+')"><g class="rg"><circle r="'+R+'" fill="none" stroke="rgba(94,58,36,.2)" stroke-width="'+(mob?7:11)+'"/><circle r="'+(R-(mob?5:8))+'" fill="none" stroke="rgba(94,58,36,.3)" stroke-width="1.4"/></g></g></svg>');
@@ -296,8 +294,8 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
   var wspan=wd.querySelector('span'),dg=wd.querySelectorAll('i');
   var T0=0,fin=false,revealed=false,P=[];
   function unlock(){D.style.overflow='';if(lenis)lenis.start();['wheel','touchstart','keydown','pointerdown'].forEach(function(e){removeEventListener(e,skip)})}
-  function end(){if(fin)return;fin=true;unlock();if(!revealed){revealed=true;done()}sp.remove()}
-  function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
+  function end(){if(fin)return;fin=true;hero.style.transform='';unlock();if(!revealed){revealed=true;done()}sp.remove()}
+  function skip(e){if(fin||!T0||performance.now()-T0<450)return;if(e&&e.type==='wheel'&&Math.abs(e.deltaY)<30)return;unlock();hero.style.transform='';if(!revealed){revealed=true;done()}sp.style.transition='opacity .3s';sp.style.opacity='0';setTimeout(end,320)}
   D.style.overflow='hidden';if(lenis)lenis.stop();
   ['wheel','touchstart','keydown','pointerdown'].forEach(function(e){addEventListener(e,skip,{passive:true})});
   if(reduce){cv.remove();ring.remove();wspan.style.clipPath='none';
@@ -342,21 +340,19 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
     ring.style.opacity=(1-k(t,1.28,1.45)).toFixed(3);
     rc.forEach(function(c,j){c.setAttribute('stroke-dasharray',C);c.setAttribute('stroke-dashoffset',(C*(1-rd)*(j?1:-1)).toFixed(1))});
     rg.setAttribute('transform','rotate(-80) scale('+(1+k(t,1.2,1.45)*.06).toFixed(4)+')');
-    // espresso machine opens from the ring outward behind the 561
-    var op=io(k(t,1.2,1.62)),rr=op*Math.hypot(W,H)*.55;img.style.clipPath='circle('+rr.toFixed(1)+'px at 50% 50%)';
-    img.style.transform='scale('+(1.08-.08*op).toFixed(4)+')';
+    // the ring opens into a hole that grows until the hero underneath fills the screen
+    var op=io(k(t,1.2,1.75)),rr=op*Math.hypot(W,H)*.52,mk=rr>0?'radial-gradient(circle at 50% 50%, transparent '+rr.toFixed(1)+'px, #000 '+(rr+1.5).toFixed(1)+'px)':'none';
+    sp.style.webkitMaskImage=mk;sp.style.maskImage=mk;
+    hero.style.transform=t<1.2?'scale(1.04)':'scale('+(1.04-.04*op).toFixed(4)+')';
     // the 561 eases apart and lifts off as the photo takes over
     var sp3=io(k(t,1.22,1.7)),dx=sp3*W*(mob?.05:.07);
     dg[0].style.transform='translateX('+(-dx).toFixed(1)+'px)';dg[2].style.transform='translateX('+dx.toFixed(1)+'px)';
     wd.style.transform='scale('+(1+sp3*.05).toFixed(4)+')';wd.style.opacity=(1-k(t,1.42,1.72)).toFixed(3);
-    // then the photo settles into the hero
-    img.style.opacity=(1-io(k(t,1.68,2.0))).toFixed(3);if(t>1.62)sp.querySelector('.sp-bg').style.opacity=0;
-    if(t>1.72&&!revealed){revealed=true;done();unlock()}
-    if(t<2.02)requestAnimationFrame(tick);else end();
+    if(t>1.35&&!revealed){revealed=true;done();unlock()}
+    if(t<1.78)requestAnimationFrame(tick);else end();
   }
   var started=false,start=function(){if(!started){started=true;requestAnimationFrame(tick)}};
-  var im=new Image();im.src='assets/col-machine.jpg';
-  Promise.all([document.fonts?document.fonts.load('600 100px "Cormorant Garamond"').catch(function(){}):0,im.decode?im.decode().catch(function(){}):0]).then(start);setTimeout(start,900);
+  (document.fonts?document.fonts.load('600 100px "Cormorant Garamond"').catch(function(){}):Promise.resolve()).then(start);setTimeout(start,900);
 })();
 
 // reveal on enter
