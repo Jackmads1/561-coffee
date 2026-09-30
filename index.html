@@ -463,9 +463,9 @@ requestAnimationFrame(frame);
     d.innerHTML=h+h+h+h;
   });
   var pk=document.getElementById('peek');document.body.appendChild(pk);var im=pk.querySelector('img'),mx=0,my=0,px=0,py=0,on=false;
-  Object.keys(pics).forEach(function(k){new Image().src='assets/'+pics[k]+'.jpg'});
+  Object.keys(pics).forEach(function(k){new Image().src='assets/'+pics[k]+'.jpg?v=2'});
   document.querySelectorAll('.marq b').forEach(function(b){
-    b.addEventListener('mouseenter',function(){if(!b.dataset.p)return;im.src='assets/'+b.dataset.p+'.jpg';pk.classList.add('on');on=true});
+    b.addEventListener('mouseenter',function(){if(!b.dataset.p)return;im.src='assets/'+b.dataset.p+'.jpg?v=2';pk.classList.add('on');on=true});
     b.addEventListener('mouseleave',function(){pk.classList.remove('on');on=false});
   });
   addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
