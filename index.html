@@ -76,7 +76,7 @@ nav a:hover{opacity:.55}
 
 /* image pair */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,32px);width:min(78vw,1040px);margin:0 auto;background:var(--black)}
-.pair figure{margin:0;aspect-ratio:.85;overflow:hidden}
+.pair figure{margin:0;aspect-ratio:.665;overflow:hidden}
 .pair svg,.pair canvas{display:block;width:100%;height:100%;will-change:transform;transform:scale(1.12)}
 .pair img,.pair video{display:block;width:100%;height:100%;object-fit:cover;will-change:transform;transform:scale(1.12)}
 .spacer{height:clamp(60px,10vh,120px);background:var(--black)}
@@ -396,7 +396,7 @@ function frame(t){
     var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
     cx+=((cq-.35)*sp-cx)*.09;
     figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(+f.dataset.d*cx).toFixed(2)+'px))'});
-    pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.14) translateY('+((q-.5)*-11)+'%)'});
+    pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.07) translateY('+((q-.5)*-6)+'%)'});
     marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/4;var o=(y*.5)%w;m.style.transform='translateX('+(d>0?o-w:-o)+'px)'});
   }
   requestAnimationFrame(frame);
