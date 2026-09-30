@@ -225,7 +225,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <a class="btn" href="about.html">Our story</a>
 </section>
 
-<div class="pair" data-nav="dark"><figure><img class="px" data-s=".12" src="assets/latte-glass.jpg" alt="A latte in a clear glass on a pale stone counter" loading="lazy"></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
+<div class="pair" data-nav="dark"><figure><img class="px" data-s=".12" src="assets/shelf.jpg" alt="A lit wall of shelves stocked with every 561 Coffee bag, with mugs, tumblers and bottles below" loading="lazy"></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
 <div class="spacer" data-nav="dark"></div>
 </div>
 
@@ -396,7 +396,7 @@ function frame(t){
     var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
     cx+=((cq-.35)*sp-cx)*.09;
     figs.forEach(function(f){f.style.transform='translateX(calc(-50% + '+(+f.dataset.d*cx).toFixed(2)+'px))'});
-    pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.12) translateY('+((q-.5)*-8)+'%)'});
+    pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect(),q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform='scale(1.14) translateY('+((q-.5)*-11)+'%)'});
     marqs.forEach(function(m){var d=+m.dataset.d,w=m.scrollWidth/4;var o=(y*.5)%w;m.style.transform='translateX('+(d>0?o-w:-o)+'px)'});
   }
   requestAnimationFrame(frame);
