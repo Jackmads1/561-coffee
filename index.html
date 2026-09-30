@@ -191,15 +191,20 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 #splash .sp-pen text{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:0;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
 #splash .sp-pen .w{will-change:transform}
 @keyframes spFail{to{visibility:hidden}}
+/* page change: a cream sheet covers the screen on the way out and lifts off on the way in (assets/site.js) */
+#veil{position:fixed;inset:0;z-index:300;background:var(--paper);pointer-events:none;transform:translateY(0);transition:transform .7s cubic-bezier(.7,0,.2,1);animation:veilOff .01s 2.5s forwards}
+@keyframes veilOff{to{transform:translateY(-101%)}}
+#veil.gone{transform:translateY(-101%)}#veil.cover{transform:translateY(0)}#veil.below{transform:translateY(101%);transition:none}
+@media (prefers-reduced-motion: reduce){#veil{display:none}}
 </style>
 </head>
 <body>
 <div id="splash" aria-hidden="true"><div class="sp-cover"><div class="sp-bg"></div></div></div>
 
 <nav id="nav">
-  <div class="l"><a href="#about">About</a><a href="#shop">Shop</a><a href="#spots">Spots</a><a href="#menu">Menu</a></div>
+  <div class="l"><a href="about.html">About</a><a href="shop.html">Shop</a><a href="#spots">Spots</a><a href="#menu">Menu</a></div>
   <a class="logo" href="#top" aria-label="561 Coffee">561</a>
-  <div class="r"><a href="#shop">bag (0)</a><span class="lang"><a href="#top">ES</a><a class="on" href="#top">EN</a></span></div>
+  <div class="r"><a href="shop.html">bag (0)</a><span class="lang"><a href="#top">ES</a><a class="on" href="#top">EN</a></span></div>
 </nav>
 
 
@@ -208,7 +213,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
     <div class="ly" id="hA"><img src="assets/hero-arch.jpg" alt="An espresso machine pulling two shots on a stone counter under a sunlit plaster arch, olive leaf shadows across the wall"></div>
     <div class="tx ta" id="tA"><span class="logo">561</span><div class="tag">Roasted<i>/</i>Poured<i>/</i>Shared</div></div>
     <div class="cue" id="cue">SCROLL<span></span></div>
-    <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted weekly<br>in San Antonio</h1><a href="#shop">SHOP COFFEE</a></div>
+    <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted weekly<br>in San Antonio</h1><a href="shop.html">SHOP COFFEE</a></div>
   </div>
 </section>
 <div class="dotzone" id="dotzone"><canvas id="dots" aria-hidden="true"></canvas>
@@ -216,7 +221,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <p class="kicker serif rv0">This is 561</p>
   <h1 class="huge"><span class="ln"><span>Coffee</span></span><span class="ln"><span>roasted in</span></span><span class="ln"><span>San Antonio</span></span></h1>
   <p class="sub">A roaster built around one area code. We roast every week in small batches and pour it straight, no fuss and no attitude.</p>
-  <a class="btn" href="#spots">Our story</a>
+  <a class="btn" href="about.html">Our story</a>
 </section>
 
 <div class="pair" data-nav="dark"><figure><img class="px" data-s=".12" src="assets/pair-tamper.jpg" alt="A walnut espresso tamper on a sunlit stone counter with loose grounds"></figure><figure><video class="px" data-s=".12" src="assets/pour.mp4" poster="assets/pour.jpg" autoplay muted loop playsinline preload="auto" aria-label="Latte art being poured into a cup"></video></figure></div>
@@ -236,7 +241,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
     <article class="prod rv"><div class="ph"><img src="assets/m-tumbler.jpg" alt="561 Coffee cream tumbler with maroon stripes" loading="lazy"></div><div class="meta"><div><h3>561 Tumbler</h3><p>Insulated, 16 oz</p></div><div class="pr"><u>$32</u></div></div></article>
     <article class="prod rv"><div class="ph"><img src="assets/m-bottle.jpg" alt="561 Coffee steel bottle with bamboo lid" loading="lazy"></div><div class="meta"><div><h3>561 Bottle</h3><p>Steel, bamboo lid, 20 oz</p></div><div class="pr"><u>$30</u></div></div></article>
   </div><div class="hbar"><i id="hbar"></i></div></div></div>
-  <a class="btn" href="#shop" style="opacity:1;transform:none">Shop all</a>
+  <a class="btn" href="shop.html" style="opacity:1;transform:none">Shop all</a>
 </section>
 
 <section class="collage" id="collage" data-nav="dark">
@@ -296,7 +301,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 
 <footer data-nav="dark">
   <div class="ft"><div class="t">Coffee, beans,<br>good mornings</div><span class="logo">561</span><div class="t r">Small batch<br>roasted weekly</div></div>
-  <div class="fb"><a href="#spots">Contact</a><a href="#shop">Shipping</a><a href="#top">Privacy</a><span>© 2026 561 Coffee</span></div>
+  <div class="fb"><a href="#spots">Contact</a><a href="shop.html">Shipping</a><a href="#top">Privacy</a><span>© 2026 561 Coffee</span></div>
 </footer>
 
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
@@ -466,5 +471,6 @@ requestAnimationFrame(frame);
 document.getElementById('news').addEventListener('submit',function(e){e.preventDefault();var i=this.querySelector('input');i.value='';i.placeholder='Thanks. Sign-ups open soon.'});
 })();
 </script>
+<script src="assets/site.js"></script>
 </body>
 </html>
