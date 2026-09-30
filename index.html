@@ -275,16 +275,18 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 <section class="menu io" id="menu" data-nav="dark">
   <p class="kicker serif">Pour one out</p>
   <h2 class="huge"><span class="ln"><span>The menu</span></span></h2>
-  <div class="marq"><div data-d="1">Espresso,&nbsp; Cortado,&nbsp; Flat White,&nbsp; Latte,&nbsp; Pour Over,&nbsp; Cold Brew,&nbsp; 561 Tonic,&nbsp; Espresso,&nbsp; Cortado,&nbsp; Flat White,&nbsp; Latte,&nbsp; Pour Over,&nbsp;</div></div>
+  <div class="marq"><div data-d="1">Espresso,&nbsp; Americano,&nbsp; Cortado,&nbsp; Cappuccino,&nbsp; Flat White,&nbsp; Latte,&nbsp; Pour Over,&nbsp; Cold Brew,&nbsp; 561 Tonic,&nbsp; Espresso,&nbsp; Americano,&nbsp; Cortado,&nbsp; Cappuccino,&nbsp; Flat White,&nbsp; Latte,&nbsp; Pour Over,&nbsp;</div></div>
   <div class="marq" style="margin-top:0"><div data-d="-1">Batch Brew,&nbsp; Oat Latte,&nbsp; Iced Cortado,&nbsp; Signature Blend,&nbsp; Ocean Roast,&nbsp; Colombian Reserve,&nbsp; Batch Brew,&nbsp; Oat Latte,&nbsp; Iced Cortado,&nbsp; Espresso Roast,&nbsp; Decaf Blend,&nbsp;</div></div>
   <div class="list">
     <div class="it"><div><b>Espresso</b><span>Double shot, 18 g in, 36 g out</span></div><em>$3.50</em></div>
+    <div class="it"><div><b>Latte</b><span>Hot or iced, 12 oz</span></div><em>$5.00</em></div>
+    <div class="it"><div><b>Americano</b><span>Double shot, hot water, hot or iced</span></div><em>$3.75</em></div>
     <div class="it"><div><b>Batch Brew</b><span>Rotating coffee, 12 oz</span></div><em>$3.00</em></div>
     <div class="it"><div><b>Cortado</b><span>Equal parts espresso and milk</span></div><em>$4.25</em></div>
     <div class="it"><div><b>Pour Over</b><span>Any coffee on the shelf</span></div><em>$5.50</em></div>
-    <div class="it"><div><b>Flat White</b><span>Double shot, thin microfoam</span></div><em>$4.75</em></div>
+    <div class="it"><div><b>Cappuccino</b><span>Double shot, deep foam, 8 oz</span></div><em>$4.50</em></div>
     <div class="it"><div><b>Cold Brew</b><span>Steeped 18 hours</span></div><em>$4.75</em></div>
-    <div class="it"><div><b>Latte</b><span>Hot or iced, 12 oz</span></div><em>$5.00</em></div>
+    <div class="it"><div><b>Flat White</b><span>Double shot, thin microfoam</span></div><em>$4.75</em></div>
     <div class="it"><div><b>561 Tonic</b><span>Espresso, tonic, orange peel</span></div><em>$5.75</em></div>
   </div>
   <p class="note">Oat and almond milk at no extra charge.</p>
@@ -455,7 +457,7 @@ requestAnimationFrame(frame);
 
 // menu: hover a drink in the sliding lines to see it
 (function(){
-  var pics={'Espresso':'d-espresso','Cortado':'d-cortado','Flat White':'d-flatwhite','Latte':'d-latte','Oat Latte':'d-latte','Pour Over':'d-batch','Batch Brew':'d-batch','Cold Brew':'d-coldbrew','561 Tonic':'d-coldbrew','Iced Cortado':'d-iced','Signature Blend':'s-signature','Ocean Roast':'s-ocean','Colombian Reserve':'s-colombian','Espresso Roast':'s-espresso','Decaf Blend':'s-decaf'};
+  var pics={'Espresso':'d-espresso','Americano':'d-espresso','Cortado':'d-cortado','Cappuccino':'d-flatwhite','Flat White':'d-flatwhite','Latte':'d-latte','Oat Latte':'d-latte','Pour Over':'d-batch','Batch Brew':'d-batch','Cold Brew':'d-coldbrew','561 Tonic':'d-coldbrew','Iced Cortado':'d-iced','Signature Blend':'s-signature','Ocean Roast':'s-ocean','Colombian Reserve':'s-colombian','Espresso Roast':'s-espresso','Decaf Blend':'s-decaf'};
   document.querySelectorAll('.marq div').forEach(function(d){
     var seen={},h=d.textContent.split(',').map(function(t){var n=t.replace(/\u00a0/g,' ').trim();if(!n||seen[n])return '';seen[n]=1;return '<b data-p="'+(pics[n]||'')+'">'+n+'</b>,&nbsp; '}).join('');
     d.innerHTML=h+h+h+h;
