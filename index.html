@@ -22,6 +22,24 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
 .logo{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;display:inline-block;letter-spacing:-.02em;line-height:1;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
 
+/* hero: wide photo, sticky; scrolling slides the view across to the espresso machine */
+.intro{position:relative;height:260vh;background:var(--black)}
+.intro .stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.intro .ly{position:absolute;left:0;top:0;width:max(100vw,253.5vh);height:calc(max(100vw,253.5vh) / 2.535);transform-origin:0 0;will-change:transform}
+.intro .ly img{display:block;width:100%;height:100%}
+.intro .tx{position:absolute;left:0;right:0;text-align:center;color:var(--cream);z-index:2;will-change:transform,opacity;text-shadow:0 1px 26px rgba(43,30,22,.45)}
+.intro .ta{top:34%}.intro .ta .logo{font-size:clamp(96px,11vw,170px);line-height:.9;display:block}
+.intro .tag{font:500 12px/1 Archivo,sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:28px}
+.intro .tag i{font-style:normal;margin:0 1.4em;opacity:.8}
+.intro .cue{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);font:500 11px/1 Archivo,sans-serif;letter-spacing:.3em;color:var(--cream);text-align:center;z-index:2}
+.intro .cue span{display:block;width:1px;height:38px;background:currentColor;margin:14px auto 0;transform-origin:top;animation:cue 2.2s ease-in-out infinite}
+.intro .ta>*{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform 1.1s cubic-bezier(.2,.75,.15,1)}.intro .ta .tag{transition-delay:.15s}
+.intro.in .ta>*{opacity:1;transform:none}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
+.intro .tb{top:50%;left:7vw;right:auto;text-align:left;opacity:0;margin-top:-120px;max-width:44vw}
+.intro .tb small{display:block;font:500 12px/1 Archivo,sans-serif;letter-spacing:.34em;text-transform:uppercase;margin-bottom:18px}
+.intro .tb h1{font:500 clamp(44px,5vw,84px)/1 'Cormorant Garamond',serif;margin:0;font-variant-numeric:lining-nums}
+.intro .tb a{display:inline-block;margin-top:20px;padding:12px 6px;border-top:1px solid rgba(241,231,216,.6);border-bottom:1px solid rgba(241,231,216,.6);font:500 12px/1 Archivo,sans-serif;letter-spacing:.3em;color:inherit;text-decoration:none}
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;height:clamp(60px,5.6vw,84px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 clamp(18px,3.4vw,52px);background:var(--black);color:var(--cream);border-bottom:1px solid var(--cream);box-sizing:border-box;transition:transform .55s cubic-bezier(.65,0,.35,1)}
 nav.up{transform:translateY(-101%)}
@@ -152,7 +170,9 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 .in.rv,.in .rv{opacity:1;transform:none}
 
 @media (max-width:760px){
- #top.hero .huge{font-size:10.4vw}
+ .intro .ta{top:24%}.intro .tb{top:12%;left:0;right:0;text-align:center;margin-top:0;max-width:none}
+ .intro .tag i{margin:0 .6em}.intro .tag{letter-spacing:.28em;font-size:11px}
+ #story.hero .huge{font-size:10.4vw}
  nav .l a:nth-child(n+3),nav .lang a:not(.on){display:none}
  .pair{width:calc(100% - 24px);gap:10px}
  .grid .prod{width:68vw}
@@ -185,8 +205,16 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 </nav>
 
 
+<section class="intro" id="top">
+  <div class="stick">
+    <div class="ly" id="hA"><img src="assets/hero-arch.jpg" alt="An espresso machine pulling two shots on a stone counter under a sunlit plaster arch, olive leaf shadows across the wall"></div>
+    <div class="tx ta" id="tA"><span class="logo">561</span><div class="tag">Roasted<i>/</i>Poured<i>/</i>Shared</div></div>
+    <div class="cue" id="cue">SCROLL<span></span></div>
+    <div class="tx tb" id="tB"><small>Small-batch coffee</small><h1>Roasted weekly<br>in San Antonio</h1><a href="#shop">SHOP COFFEE</a></div>
+  </div>
+</section>
 <div class="dotzone" id="dotzone"><canvas id="dots" aria-hidden="true"></canvas>
-<section class="stmt hero" id="top" data-nav="dark"><span id="about"></span>
+<section class="stmt hero io" id="story" data-nav="dark"><span id="about"></span>
   <p class="kicker serif rv0">This is 561</p>
   <h1 class="huge"><span class="ln"><span>Coffee</span></span><span class="ln"><span>roasted in</span></span><span class="ln"><span>San Antonio</span></span></h1>
   <p class="sub">A roaster built around one area code. We roast every week in small batches and pour it straight, no fuss and no attitude.</p>
@@ -331,6 +359,7 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.25});
 document.querySelectorAll('.io,.rv').forEach(function(el){io.observe(el)});
 var nav=document.getElementById('nav'),ny=0;
+var intro=document.getElementById('top'),hA=document.getElementById('hA'),tA=document.getElementById('tA'),tB=document.getElementById('tB'),cue=document.getElementById('cue');
 function seg(p,a,b){return clamp((p-a)/(b-a),0,1)}function ease(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2}
 var col=document.getElementById('collage'),figs=[].slice.call(col.querySelectorAll('figure')),cx=0;
 var pxs=[].slice.call(document.querySelectorAll('.px')),marqs=[].slice.call(document.querySelectorAll('.marq div'));
@@ -341,6 +370,13 @@ function frame(t){
   // nav hides while scrolling down, comes back on the way up
   var dy=y-ny;if(Math.abs(dy)>6){nav.classList.toggle('up',dy>0&&y>120);ny=y}if(y<=120)nav.classList.remove('up');
   if(!reduce){
+    // hero: the whole photo fills the screen height (no zoom). Scrolling pins it and slides the view across until the machine is centred
+    var ir=intro.getBoundingClientRect(),p=clamp(-ir.top/(ir.height-H),0,1),W=innerWidth,A=2.535,Wl=Math.max(W,H*A),Hl=Wl/A,mc=.56;
+    hA.style.width=Wl+'px';hA.style.height=Hl+'px';
+    var t0=Math.min(0,W-mc*Wl),t1=Math.max(W/2-mc*Wl,W-Wl),z=ease(seg(p,.12,.8)),tx=t0+(t1-t0)*z,ty=(H-Hl)/2;
+    hA.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
+    var a=ease(seg(p,0,.4));tA.style.opacity=(1-seg(p,.04,.26)).toFixed(3);tA.style.transform='translateY('+(-a*70)+'vh)';cue.style.opacity=(1-seg(p,0,.08)).toFixed(3);
+    var b=ease(seg(p,.62,.92));tB.style.opacity=b.toFixed(3);tB.style.transform='translateY('+((1-b)*5)+'vh)';
     // collage: outer photos drift outward slowly and steadily the whole time the block is on screen (eased)
     var cr=col.getBoundingClientRect(),cq=clamp((H-cr.top)/(H+cr.height),0,1),sp=innerWidth*(innerWidth<760?.05:.11);
     cx+=((cq-.35)*sp-cx)*.09;
