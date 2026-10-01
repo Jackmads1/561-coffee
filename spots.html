@@ -234,7 +234,8 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 .lede em{color:#d2b48c}
 .split{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(24px,5vw,90px);padding:clamp(50px,9vh,110px) clamp(14px,6vw,110px);background:transparent}
 /* about: a chapter can be a solid cream block with a hard edge */
-.split[data-tone="cream"]{background:var(--paper);color:var(--ink)}
+.split[data-tone="cream"]{position:relative;isolation:isolate;color:var(--ink)}
+.split[data-tone="cream"]::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--paper);clip-path:inset(var(--cy,0%) var(--cx,0%) round var(--cr,0px));will-change:clip-path}
 .split[data-tone="cream"] h2{color:var(--ink)}.split[data-tone="cream"] p{color:#4c3d31}.split[data-tone="cream"] .n{color:#8a7662}
 .split.flip figure{order:2}
 .split figure{margin:0;aspect-ratio:.8;overflow:hidden}
@@ -326,6 +327,11 @@ function frame(t){if(lenis)lenis.raf(t);var y=scrollY,dy=y-ny;if(Math.abs(dy)>6)
   if(!reduce)pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect();if(r.bottom<0||r.top>H)return;var q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform=(im.dataset.s?'scale(1.12) ':'')+'translateY('+((q-.5)*(im.dataset.s?-8:-10))+'%)'});
   requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
+// cream chapters: the block grows open as it reaches the middle of the screen and shrinks away as it leaves
+var tones=[].slice.call(document.querySelectorAll('[data-tone="cream"]'));
+if(tones.length&&!reduce)(function tone(){tones.forEach(function(t){var r=t.getBoundingClientRect();if(r.bottom>-50&&r.top<H+50){
+  var c=r.top+r.height/2,a=clamp(1-Math.abs(c-H/2)/(H*.55),0,1),e=1-Math.pow(1-a,3),k=1-e;
+  t.style.setProperty('--cx',(k*5).toFixed(2)+'%');t.style.setProperty('--cy',(k*14).toFixed(2)+'%');t.style.setProperty('--cr',(k*36).toFixed(1)+'px')}});requestAnimationFrame(tone)})();
 // map
 var SP=[["Thomas Hall", "Trinity University, One Trinity Place", "San Antonio, TX 78212", 29.46062, -98.48637, "Bruce Thomas Residence Hall, Trinity University"]];
 if(window.L){
