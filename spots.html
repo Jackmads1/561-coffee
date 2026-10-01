@@ -164,7 +164,8 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 .ft{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:20px}
 .ft .t{font:800 9.5px/1.35 Archivo,sans-serif;letter-spacing:.06em;text-transform:uppercase}
 .ft .t.r{text-align:right}
-.ft .logo{font-size:clamp(56px,6vw,90px)}
+.ft .logo{grid-column:1/-1;grid-row:1;justify-self:center;font-size:clamp(120px,min(66vw,95vh),1500px);line-height:.74;letter-spacing:-.02em;margin:0}
+.ft{grid-template-columns:1fr 1fr}
 .fb{display:flex;gap:22px;flex-wrap:wrap;margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font:600 9.5px Archivo,sans-serif;color:#c4ae95}
 .fb span:last-child{margin-left:auto}
 
