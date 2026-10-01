@@ -232,7 +232,12 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
 .ahero .kicker{color:var(--cream)}
 .lede{max-width:880px;margin:0 auto;font:400 clamp(28px,3.4vw,52px)/1.08 'Instrument Serif',Georgia,serif;letter-spacing:-.01em}
 .lede em{color:#d2b48c}
-.split{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(24px,5vw,90px);padding:clamp(50px,9vh,110px) clamp(14px,6vw,110px);background:var(--black)}
+.split{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(24px,5vw,90px);padding:clamp(50px,9vh,110px) clamp(14px,6vw,110px);background:transparent}
+/* about: the page fades to cream while a cream chapter is in the middle of the screen */
+body.page{transition:background-color .9s ease}
+.split h2,.split p,.split .n{transition:color .9s ease}
+body.cream{background:var(--paper)}
+body.cream .split h2{color:var(--ink)}body.cream .split p{color:#4c3d31}body.cream .split .n{color:#8a7662}
 .split.flip figure{order:2}
 .split figure{margin:0;aspect-ratio:.8;overflow:hidden}
 .split figure img,.split figure video{width:100%;height:100%;object-fit:cover;transform:scale(1.12);will-change:transform}
@@ -277,7 +282,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <figure><video class="px" data-s="1" src="assets/beans.mp4" poster="assets/beans.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Freshly roasted beans with smoke rising"></video></figure>
   <div class="rv"><span class="n">01</span><h2>Roasted<br>weekly</h2><p>Every bag is roasted in a small batch and sent out while it is still fresh. If it has been sitting on a shelf for months, it is not ours.</p></div>
 </section>
-<section class="split flip io">
+<section class="split flip io" data-tone="cream">
   <figure><img class="px" data-s="1" src="assets/pair-tamper.jpg" alt="A walnut espresso tamper on a sunlit stone counter" loading="lazy"></figure>
   <div class="rv"><span class="n">02</span><h2>Five<br>coffees</h2><p>Signature, Ocean, Colombian, Espresso and Decaf. A short list on purpose, so each one gets the attention it deserves.</p></div>
 </section>
@@ -321,6 +326,8 @@ function frame(t){if(lenis)lenis.raf(t);var y=scrollY,dy=y-ny;if(Math.abs(dy)>6)
   if(!reduce)pxs.forEach(function(im){var r=im.parentNode.getBoundingClientRect();if(r.bottom<0||r.top>H)return;var q=clamp((H-r.top)/(H+r.height),0,1);im.style.transform=(im.dataset.s?'scale(1.12) ':'')+'translateY('+((q-.5)*(im.dataset.s?-8:-10))+'%)'});
   requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
+var tones=document.querySelectorAll('[data-tone="cream"]');
+if(tones.length){var on=new Set(),tio=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?on.add(e.target):on.delete(e.target)});document.body.classList.toggle('cream',on.size>0)},{rootMargin:'-35% 0px -35% 0px'});tones.forEach(function(t){tio.observe(t)})}
 
 })();
 </script>
