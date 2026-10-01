@@ -298,7 +298,7 @@ footer{background:var(--black);padding:clamp(50px,9vh,90px) clamp(14px,2vw,26px)
   <aside class="slist">
     <h1>Find your 561 Coffee spot</h1>
     <form class="sfind" role="search" onsubmit="return false"><input id="sq" type="search" placeholder="Search a city" aria-label="Search a city" autocomplete="off"><button type="button" id="sme" aria-label="Use my location"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12H5M19 12h3.5"/></svg></button></form>
-    <article class="spot" data-i="0" data-q="thomas hall trinity university, one trinity place san antonio, tx 78212"><h2>561 Coffee - Thomas Hall</h2><div class="ad"><svg viewBox="0 0 14 19" aria-hidden="true"><path d="M7 0a7 7 0 0 0-7 7c0 5 7 12 7 12s7-7 7-12a7 7 0 0 0-7-7zm0 9.6A2.6 2.6 0 1 1 7 4.4a2.6 2.6 0 0 1 0 5.2z"/></svg><span>Trinity University, One Trinity Place, San Antonio, TX 78212</span></div><div class="ln"><a href="https://www.google.com/maps/dir/?api=1&amp;destination=29.4624,-98.4832" target="_blank" rel="noopener">Get directions</a><span>-</span><a href="#" class="go">Show on map</a></div></article>
+    <article class="spot" data-i="0" data-q="thomas hall trinity university, one trinity place san antonio, tx 78212"><h2>561 Coffee - Thomas Hall</h2><div class="ad"><svg viewBox="0 0 14 19" aria-hidden="true"><path d="M7 0a7 7 0 0 0-7 7c0 5 7 12 7 12s7-7 7-12a7 7 0 0 0-7-7zm0 9.6A2.6 2.6 0 1 1 7 4.4a2.6 2.6 0 0 1 0 5.2z"/></svg><span>Trinity University, One Trinity Place, San Antonio, TX 78212</span></div><div class="ln"><a href="https://www.google.com/maps/dir/?api=1&amp;destination=29.46062,-98.48637" target="_blank" rel="noopener">Get directions</a><span>-</span><a href="#" class="go">Show on map</a></div></article>
     <p class="snone" id="snone">No spots there yet. We are only in San Antonio for now.</p>
   </aside>
   <div class="smap" data-lenis-prevent><div id="map" role="region" aria-label="Map of 561 Coffee spots"></div></div>
@@ -323,9 +323,9 @@ function frame(t){if(lenis)lenis.raf(t);var y=scrollY,dy=y-ny;if(Math.abs(dy)>6)
   requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
 // map
-var SP=[["Thomas Hall", "Trinity University, One Trinity Place", "San Antonio, TX 78212", 29.4624, -98.4832, "On campus at Trinity University"]];
+var SP=[["Thomas Hall", "Trinity University, One Trinity Place", "San Antonio, TX 78212", 29.46062, -98.48637, "Bruce Thomas Residence Hall, Trinity University"]];
 if(window.L){
-  var map=L.map('map',{zoomControl:false}).setView([SP[0][3],SP[0][4]],16);
+  var map=L.map('map',{zoomControl:false}).setView([SP[0][3],SP[0][4]],17);
   L.control.zoom({position:'topright'}).addTo(map);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
   var cards=[].slice.call(document.querySelectorAll('.spot')),marks=SP.map(function(s,i){

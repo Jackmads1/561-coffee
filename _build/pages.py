@@ -186,7 +186,7 @@ about_body = '''<main>
 import json
 SPOTS = [
     # name, address line, city, lat, lng, note
-    ('Thomas Hall', 'Trinity University, One Trinity Place', 'San Antonio, TX 78212', 29.4624, -98.4832, 'On campus at Trinity University'),
+    ('Thomas Hall', 'Trinity University, One Trinity Place', 'San Antonio, TX 78212', 29.46062, -98.48637, 'Bruce Thomas Residence Hall, Trinity University'),
 ]
 
 SPOTS_CSS = r"""<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -246,7 +246,7 @@ spots_body = '''<main class="spage" data-nav="light">
 SPOTS_JS = r"""// map
 var SP=@@SPOTS@@;
 if(window.L){
-  var map=L.map('map',{zoomControl:false}).setView([SP[0][3],SP[0][4]],16);
+  var map=L.map('map',{zoomControl:false}).setView([SP[0][3],SP[0][4]],17);
   L.control.zoom({position:'topright'}).addTo(map);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
   var cards=[].slice.call(document.querySelectorAll('.spot')),marks=SP.map(function(s,i){
